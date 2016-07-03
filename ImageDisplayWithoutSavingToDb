@@ -1,0 +1,77 @@
+Asp.Net Image Upload and Preview without Saving in Folder using C#, VB.NET
+By: Suresh Dasari Jun 13, 2016
+Categories: Asp.net , c# , C#.Net , Fileupload , VB.NET
+Introduction: 
+
+Here I will explain how to upload and show / display image without saving in asp.net using c#, vb.net with example or image upload and preview without saving in folder in asp.net using c#, vb.net with example or display image in image control after upload in asp.net without saving to folder using c#, vb.net with example. By using binaryreader property in asp.net we can upload and display image without saving in folder using c#, vb.net.
+
+Description: 
+   
+In previous articles I explained jQuery upload images with postback / page refresh in asp.net, Asp.net upload images to folder and images path to database, upload and display images from database in asp.net, Resize image without losing image quality in asp.net, jQuery create / read / delete cookies in asp.net with example and many articles relating to gridview, asp.net, c#,vb.net and jQuery. Now I will explain how to upload and preview / display image without saving in folder in asp.net using c#, vb.net with example.
+
+To upload and display image in asp.net without saving in folder we to create new website in visual studio and open your aspx page and write the following code
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+<title>ASP.Net Upload and Preview Image without saving in C#, VB.Net</title>
+<style type="text/css">
+#imgDetail
+{
+width:30%;
+height:30%;
+}
+</style>
+</head>
+<body>
+<form id="form1" runat="server">
+<div style=" width:50%">
+<asp:FileUpload ID="upload1" runat="server" />
+<asp:Button ID="btnPreview" runat="server" Text="Upload & Preview" onclick="btnPreview_Click" />
+<hr />
+<asp:Image ID="imgDetail" Visible = "false" runat="server" />
+</div>
+</form>
+</body>
+</html>
+
+
+After adding code in aspx page now open code behind file and add following namespaces
+
+C# Code
+
+
+using System;
+using System.IO;
+
+After completion of adding namespaces you need to write the code like as shown below
+
+
+protected void btnPreview_Click(object sender, EventArgs e)
+{
+Stream strm = upload1.PostedFile.InputStream;
+BinaryReader reader = new BinaryReader(strm);
+Byte[] bytes = reader.ReadBytes(Convert.ToInt32(strm.Length));
+imgDetail.ImageUrl = "data:image/png;base64," + Convert.ToBase64String(bytes, 0, bytes.Length);
+imgDetail.Visible = true;
+}
+
+VB.NET Code
+
+
+Imports System.IO
+Partial Class VBCode
+Inherits System.Web.UI.Page
+Protected Sub Page_Load(ByVal sender As Object, ByVal e As EventArgs)
+
+End Sub
+Protected Sub btnPreview_Click(ByVal sender As Object, ByVal e As EventArgs)
+Dim strm As Stream = upload1.PostedFile.InputStream
+Dim reader As New BinaryReader(strm)
+Dim bytes As [Byte]() = reader.ReadBytes(Convert.ToInt32(strm.Length))
+imgDetail.ImageUrl = "data:image/png;base64," + Convert.ToBase64String(bytes, 0, bytes.Length)
+imgDetail.Visible = True
+End Sub
+End Class
+
+Demo
