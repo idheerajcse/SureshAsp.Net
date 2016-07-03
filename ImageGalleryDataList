@@ -1,0 +1,125 @@
+Asp.Net Image Gallery with Enlarge Image Preview in DataList using C# and VB.Net
+
+
+
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1" runat="server">
+<title>Show Image Preview when hover on Link using jQuery</title>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js">
+</script>
+<script type="text/javascript" language="javascript">
+$(document).ready(function() {
+ShowImagePreview();
+});
+// Configuration of the x and y offsets
+function ShowImagePreview() {
+xOffset = -20;
+yOffset = 40;
+
+$("a.preview").hover(function(e) {
+this.t = this.title;
+this.title = "";
+var c = (this.t != "") ? "<br/>" + this.t : "";
+$("body").append("<p id='preview'><img src='" + this.href + "' alt='Image preview' />" + c + "</p>");
+$("#preview")
+.css("top", (e.pageY - xOffset) + "px")
+.css("left", (e.pageX + yOffset) + "px")
+.fadeIn("slow");
+},
+
+function() {
+this.title = this.t;
+$("#preview").remove();
+});
+
+$("a.preview").mousemove(function(e) {
+$("#preview")
+.css("top", (e.pageY - xOffset) + "px")
+.css("left", (e.pageX + yOffset) + "px");
+});
+};
+
+</script>
+<style type="text/css">
+#preview{
+position:absolute;
+border:3px solid #ccc;
+background:#333;
+padding:5px;
+display:none;
+color:#fff;
+box-shadow: 4px 4px 3px rgba(103, 115, 130, 1);
+}
+</style>
+</head>
+<body>
+<form id="form1" runat="server">
+<div>
+<asp:DataList ID="dtlist" runat="server" RepeatColumns="4" CellPadding="5">
+<ItemTemplate>
+<asp:HyperLink ID="HyperLink1" class="preview" ToolTip='<%#Bind("Name") %>' NavigateUrl='<%# Bind("Name", "~/Images/{0}") %>' runat="server">
+<asp:Image Width="100" ID="Image1" ImageUrl='<%# Bind("Name", "~/Images/{0}") %>' runat="server" />
+</asp:HyperLink>
+</ItemTemplate>
+<ItemStyle BorderColor="Brown" BorderStyle="dotted" BorderWidth="3px" HorizontalAlign="Center"
+VerticalAlign="Bottom" />
+</asp:DataList>
+</div>
+</form>
+</body>
+</html>
+Now add the following namespaces in code behind
+
+
+C# Code
+
+using System;
+using System.Collections;
+using System.IO;
+After add namespaces write the following code in code behind
+
+protected void Page_Load(object sender, EventArgs e)
+{
+if (!IsPostBack)
+{
+BindDataList();
+}
+}
+protected void BindDataList()
+{
+DirectoryInfo dir = new DirectoryInfo(MapPath("Images"));
+FileInfo[] files = dir.GetFiles();
+ArrayList listItems = new ArrayList();
+foreach (FileInfo info in files)
+{
+listItems.Add(info);
+}
+dtlist.DataSource = listItems;
+dtlist.DataBind();
+}
+VB.NET Code
+
+
+Imports System.Collections
+Imports System.IO
+Partial Class VBCodeSamples
+Inherits System.Web.UI.Page
+Protected Sub Page_Load(ByVal sender As Object, ByVal e As EventArgs) Handles Me.Load
+
+If Not IsPostBack Then
+BindDataList()
+End If
+End Sub
+Protected Sub BindDataList()
+Dim dir As New DirectoryInfo(MapPath("Images"))
+Dim files As FileInfo() = dir.GetFiles()
+Dim listItems As New ArrayList()
+For Each info As FileInfo In files
+listItems.Add(info)
+Next
+dtlist.DataSource = listItems
+dtlist.DataBind()
+End Sub
+Demo 
