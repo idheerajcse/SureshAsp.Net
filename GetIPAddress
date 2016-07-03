@@ -1,0 +1,62 @@
+Get Users IP Address in Asp.Net using C#, VB.NET with Example
+By: Suresh Dasari Apr 11, 2016
+Categories: Asp.net , C#.Net , VB.NET
+Introduction: 
+
+Here we will learn how to get users / client IP address in asp.net using c# and vb.net with example or retrieving user's IP address in asp.net using c# and vb.net or how to get IP address of visitors machine in asp.net using c# and vb.net with example.
+
+Description: 
+   
+In previous articles I explained JavaScript Get User IP Address, City, Latitude, Longitude, how to find client machine IP using jquery in asp.net, show users current location in google map using latitude and longitude in asp.net, show google map with latitude & longitude in asp.net and many articles relating to asp.net, c#, vb.net jQuery. Now I will explain how to get users ip address or client IP address of machine in asp.net using c# and vb.net.
+
+To get user / client ip address of machine in asp.net first create new application in visual studio then open aspx page and write the code as shown following.
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+<title>Get visitors machine IP in asp.net</title>
+</head>
+<body>
+<form id="form1" runat="server">
+<div>
+<asp:Label ID="lblIP" runat="server" Font-Bold="true" Font-Size="XX-Large" ForeColor="#529E00"/>
+</div>
+</form>
+</body>
+</html>
+
+
+Now open code behind file and write the code like as shown below
+
+C# Code
+
+
+protected void Page_Load(object sender, EventArgs e)
+{
+string IPAdd = string.Empty;
+IPAdd = Request.ServerVariables["HTTP_X_FORWARDED_FOR"];
+if (string.IsNullOrEmpty(IPAdd))
+IPAdd = Request.ServerVariables["REMOTE_ADDR"];
+lblIP.Text = IPAdd;
+}
+
+VB.NET Code
+
+
+Partial Class Default
+Inherits System.Web.UI.Page
+Protected Sub Page_Load(ByVal sender As Object, ByVal e As EventArgs) Handles Me.Load
+Dim IPAdd As String = String.Empty
+IPAdd = Request.ServerVariables("HTTP_X_FORWARDED_FOR")
+If String.IsNullOrEmpty(IPAdd) Then
+IPAdd = Request.ServerVariables("REMOTE_ADDR")
+End If
+lblIP.Text = IPAdd
+End Sub
+End Class
+
+If you observe above code when users ip address behind the proxies or routers then REMOTE_ADDR will return IP Address of router, not the user’s machine IP because of that first we need to check with HTTP_X_FORWARDED_FOR. In case if users machine IP address behind a proxy server then his machine’s IP Address will appended to Proxy Server’s IP Address.
+
+Demo
+
+Following is the sample demo of ip address of user
