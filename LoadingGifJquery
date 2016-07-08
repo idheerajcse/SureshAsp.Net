@@ -1,0 +1,47 @@
+Introduction: 
+
+Here I will explain how to use jQuery to show loading on button click or display loading image on button click with example in jQuery. By using button html property we can show loading image on button click in jQuery.
+
+Description: 
+   
+In previous articles I explained jQuery show loading image while page loading, jQuery show / hide loading image in autocomplete textbox, jQuery show progress bar on button click to load data, jQuery hide div if we click outside of it example, jQuery show images in 360 degree view plugins, jQuery validate radiobuttonlist with example and many articles relating to css, AngularJS, jQuery, JavaScript and asp.net. Now I will explain how to show loading image on button click in jQuery with example.
+
+To show loading image on button click in jQuery we need to write the code like as shown below
+
+
+<script type="text/javascript">
+$(function () {
+$('#btnloading').click(function () {
+$(this).html('<img src="http://www.bba-reman.com/images/fbloader.gif" />');
+})
+})
+</script>
+
+If you want to check it in complete example you need to write the code like as shown below
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>jQuery show loading image on button click example</title>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.10.2.js"></script>
+<script type="text/javascript">
+$(function () {
+$('#btnloading').click(function () {
+$(this).html('<img src="http://www.bba-reman.com/images/fbloader.gif" />');
+return false
+})
+$('#btnreset').click(function () {
+$('#btnloading').html('Click to Set Loading Image')
+})
+})
+</script>
+</head>
+<body>
+<form id="form1">
+<div>
+<button id="btnloading" >Click to Set Loading Image</button>
+<button id="btnreset" >Reset</button>
+</div>
+</form>
+</body>
+</html>
