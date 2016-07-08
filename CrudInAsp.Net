@@ -1,0 +1,228 @@
+Asp.net insert, Edit, update, delete data in gridview
+By: Suresh Dasari Feb 9, 2011
+Categories: Asp.net , Gridview
+ 
+ 
+Introduction:
+
+In this article I will explain how to insert, edit, update and delete data in gridview using asp.net.
+
+Description: 
+
+I have one gridview I need to write code to insert data into gridview after that I need to edit that gridview data and update it and if I want to delete the record in grdview we need to delete record simply by click on delete button of particular row to achieve these functionalities I have used some of gridview events those are 
+
+1        1) Onrowcancelingedit
+2        2) Onrowediting
+3        3) Onrowupdating
+4        4) Onrowcancelingedit
+5        5) Onrowdeleting
+
+By Using above griview events we can insert, edit, update and delete the data in gridview. My Question is how we can use these events in our coding before to see those details first design  table in database and give name Employee_Details
+ColumnName
+DataType
+UserId
+Int(set identity property=true)
+UserName
+varchar(50)
+City
+varchar(50)
+Designation
+varchar(50)
+After completion table creation design aspx page like this
+ 
+
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head runat="server">
+<title>Untitled Page</title>
+<style type="text/css">
+.Gridview
+{
+font-family:Verdana;
+font-size:10pt;
+font-weight:normal;
+color:black;
+}
+</style>
+</head>
+<body>
+<form id="form1" runat="server">
+<div>
+<asp:GridView ID="gvDetails" DataKeyNames="UserId,UserName" runat="server"
+AutoGenerateColumns="false" CssClass="Gridview" HeaderStyle-BackColor="#61A6F8"
+ShowFooter="true" HeaderStyle-Font-Bold="true" HeaderStyle-ForeColor="White"
+onrowcancelingedit="gvDetails_RowCancelingEdit"
+onrowdeleting="gvDetails_RowDeleting" onrowediting="gvDetails_RowEditing"
+onrowupdating="gvDetails_RowUpdating"
+onrowcommand="gvDetails_RowCommand">
+<Columns>
+<asp:TemplateField>
+<EditItemTemplate>
+<asp:ImageButton ID="imgbtnUpdate" CommandName="Update" runat="server" ImageUrl="~/Images/update.jpg" ToolTip="Update" Height="20px" Width="20px" />
+<asp:ImageButton ID="imgbtnCancel" runat="server" CommandName="Cancel" ImageUrl="~/Images/Cancel.jpg" ToolTip="Cancel" Height="20px" Width="20px" />
+</EditItemTemplate>
+<ItemTemplate>
+<asp:ImageButton ID="imgbtnEdit" CommandName="Edit" runat="server" ImageUrl="~/Images/Edit.jpg" ToolTip="Edit" Height="20px" Width="20px" />
+<asp:ImageButton ID="imgbtnDelete" CommandName="Delete" Text="Edit" runat="server" ImageUrl="~/Images/delete.jpg" ToolTip="Delete" Height="20px" Width="20px" />
+</ItemTemplate>
+<FooterTemplate>
+<asp:ImageButton ID="imgbtnAdd" runat="server" ImageUrl="~/Images/AddNewitem.jpg" CommandName="AddNew" Width="30px" Height="30px" ToolTip="Add new User" ValidationGroup="validaiton" />
+</FooterTemplate>
+</asp:TemplateField>
+<asp:TemplateField HeaderText="UserName">
+<EditItemTemplate>
+<asp:Label ID="lbleditusr" runat="server" Text='<%#Eval("Username") %>'/>
+</EditItemTemplate>
+<ItemTemplate>
+<asp:Label ID="lblitemUsr" runat="server" Text='<%#Eval("UserName") %>'/>
+</ItemTemplate>
+<FooterTemplate>
+<asp:TextBox ID="txtftrusrname" runat="server"/>
+<asp:RequiredFieldValidator ID="rfvusername" runat="server" ControlToValidate="txtftrusrname" Text="*" ValidationGroup="validaiton"/>
+</FooterTemplate>
+</asp:TemplateField>
+<asp:TemplateField HeaderText="City">
+<EditItemTemplate>
+<asp:TextBox ID="txtcity" runat="server" Text='<%#Eval("City") %>'/>
+</EditItemTemplate>
+<ItemTemplate>
+<asp:Label ID="lblcity" runat="server" Text='<%#Eval("City") %>'/>
+</ItemTemplate>
+<FooterTemplate>
+<asp:TextBox ID="txtftrcity" runat="server"/>
+<asp:RequiredFieldValidator ID="rfvcity" runat="server" ControlToValidate="txtftrcity" Text="*" ValidationGroup="validaiton"/>
+</FooterTemplate>
+</asp:TemplateField>
+<asp:TemplateField HeaderText="Designation">
+<EditItemTemplate>
+<asp:TextBox ID="txtDesg" runat="server" Text='<%#Eval("Designation") %>'/>
+</EditItemTemplate>
+<ItemTemplate>
+<asp:Label ID="lblDesg" runat="server" Text='<%#Eval("Designation") %>'/>
+</ItemTemplate>
+<FooterTemplate>
+<asp:TextBox ID="txtftrDesignation" runat="server"/>
+<asp:RequiredFieldValidator ID="rfvdesignation" runat="server" ControlToValidate="txtftrDesignation" Text="*" ValidationGroup="validaiton"/>
+</FooterTemplate>
+</asp:TemplateField>
+</Columns>
+</asp:GridView>
+</div>
+<div>
+<asp:Label ID="lblresult" runat="server"></asp:Label>
+</div>
+</form>
+</body>
+</html>
+Now add the following namespaces in codebehind
+
+ 
+
+
+
+using System;
+using System.Data;
+using System.Data.SqlClient;
+using System.Drawing
+After that write the following code
+
+
+SqlConnection con = new SqlConnection("Data Source=SureshDasari;Integrated Security=true;Initial Catalog=MySampleDB");
+protected void Page_Load(object sender, EventArgs e)
+{
+if (!IsPostBack)
+{
+BindEmployeeDetails();
+}
+}
+protected void BindEmployeeDetails()
+{
+con.Open();
+SqlCommand cmd = new SqlCommand("Select * from Employee_Details", con);
+SqlDataAdapter da = new SqlDataAdapter(cmd);
+DataSet ds = new DataSet();
+da.Fill(ds);
+con.Close();
+if (ds.Tables[0].Rows.Count > 0)
+{
+gvDetails.DataSource = ds;
+gvDetails.DataBind();
+}
+else
+{
+ds.Tables[0].Rows.Add(ds.Tables[0].NewRow());
+gvDetails.DataSource = ds;
+gvDetails.DataBind();
+int columncount = gvDetails.Rows[0].Cells.Count;
+gvDetails.Rows[0].Cells.Clear();
+gvDetails.Rows[0].Cells.Add(new TableCell());
+gvDetails.Rows[0].Cells[0].ColumnSpan = columncount;
+gvDetails.Rows[0].Cells[0].Text = "No Records Found";
+}
+}
+protected void gvDetails_RowEditing(object sender, GridViewEditEventArgs e)
+{
+gvDetails.EditIndex = e.NewEditIndex;
+BindEmployeeDetails();
+}
+protected void gvDetails_RowUpdating(object sender, GridViewUpdateEventArgs e)
+{
+int userid = Convert.ToInt32(gvDetails.DataKeys[e.RowIndex].Value.ToString());
+string username = gvDetails.DataKeys[e.RowIndex].Values["UserName"].ToString();
+TextBox txtcity = (TextBox)gvDetails.Rows[e.RowIndex].FindControl("txtcity");
+TextBox txtDesignation = (TextBox)gvDetails.Rows[e.RowIndex].FindControl("txtDesg");
+con.Open();
+SqlCommand cmd = new SqlCommand("update Employee_Details set City='" + txtcity.Text + "',Designation='" + txtDesignation.Text + "' where UserId=" + userid, con);
+cmd.ExecuteNonQuery();
+con.Close();
+lblresult.ForeColor = Color.Green;
+lblresult.Text = username + " Details Updated successfully";
+gvDetails.EditIndex = -1;
+BindEmployeeDetails();
+}
+protected void gvDetails_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
+{
+gvDetails.EditIndex = -1;
+BindEmployeeDetails();
+}
+protected void gvDetails_RowDeleting(object sender, GridViewDeleteEventArgs e)
+{
+int userid = Convert.ToInt32(gvDetails.DataKeys[e.RowIndex].Values["UserId"].ToString());
+string username = gvDetails.DataKeys[e.RowIndex].Values["UserName"].ToString();
+con.Open();
+SqlCommand cmd = new SqlCommand("delete from Employee_Details where UserId=" + userid, con);
+int result = cmd.ExecuteNonQuery();
+con.Close();
+if (result == 1)
+{
+BindEmployeeDetails();
+lblresult.ForeColor = Color.Red;
+lblresult.Text = username + " details deleted successfully";
+}
+}
+protected void gvDetails_RowCommand(object sender, GridViewCommandEventArgs e)
+{
+if(e.CommandName.Equals("AddNew"))
+{
+TextBox txtUsrname = (TextBox)gvDetails.FooterRow.FindControl("txtftrusrname");
+TextBox txtCity = (TextBox)gvDetails.FooterRow.FindControl("txtftrcity");
+TextBox txtDesgnation = (TextBox) gvDetails.FooterRow.FindControl("txtftrDesignation");
+con.Open();
+SqlCommand cmd =
+new SqlCommand(
+"insert into Employee_Details(UserName,City,Designation) values('" + txtUsrname.Text + "','" +
+txtCity.Text + "','" + txtDesgnation.Text + "')", con);
+int result= cmd.ExecuteNonQuery();
+con.Close();
+if(result==1)
+{
+BindEmployeeDetails();
+lblresult.ForeColor = Color.Green;
+lblresult.Text = txtUsrname.Text + " Details inserted successfully";
+}
+else
+{
+lblresult.ForeColor = Color.Red;
+lblresult.Text = txtUsrname.Text + " Details not inserted";
+}
+}
+}
