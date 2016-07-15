@@ -1,0 +1,271 @@
+Introduction:
+
+Here I will explain how to edit gridview row details with ajax modalpopupextender popup in asp.net using c#, vb.net or update asp.net gridview row with ajax modalpopupextender popup using c#, vb.net.
+
+Description:
+
+In previous articles I explained clearly install ajaxcontroltoolkit in visual studio, Ajax modalpopup confirmation box with yes or no options, Login page with ajax modalpopupextender, Ajax show progressbar during postbacks in asp.net, how to show the gridview images with lightbox effect and many more articles related to gridview, ajax, modalpopupextender in asp.net using c#, vb.net. Now I will explain how to edit gridview row details with ajax modalpopupextender popup in asp.net using c#, vb.net.
+
+
+Before we start implementation first we need to design Employee_Details table in your database like as shown below
+
+Column Name
+Data Type
+Allow Nulls
+UserId
+int(set identity property=true)
+No
+UserName
+varchar(50)
+Yes
+FirstName
+varchar(50)
+Yes
+LastName
+varchar(50)
+Yes
+City
+varchar(50)
+Yes
+Designation
+varchar(50)
+Yes
+Once table creation finished now enter some dummy data in table to bind that data to gridview.
+
+Now add AjaxControlToolkit.dll to your bin folder and design your aspx page like as shown below
+
+
+<%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+<title>Untitled Page</title>
+<style type="text/css">
+.modalBackground
+{
+background-color: Gray;
+filter: alpha(opacity=80);
+opacity: 0.8;
+z-index: 10000;
+}
+</style>
+</head>
+<body>
+<form id="form1" runat="server">
+<asp:ToolkitScriptManager ID="ScriptManager1" runat="server">
+</asp:ToolkitScriptManager>
+<div>
+<asp:GridView runat="server" ID="gvdetails" DataKeyNames="UserId" AutoGenerateColumns="false">
+<RowStyle BackColor="#EFF3FB" />
+<FooterStyle BackColor="#507CD1" Font-Bold="True" ForeColor="White" />
+<PagerStyle BackColor="#2461BF" ForeColor="White" HorizontalAlign="Center" />
+<HeaderStyle BackColor="#507CD1" Font-Bold="True" ForeColor="White" />
+<AlternatingRowStyle BackColor="White" />
+<Columns>
+<asp:TemplateField HeaderText="Edit">
+<ItemTemplate>
+<asp:ImageButton ID="imgbtn" ImageUrl="~/Edit.jpg" runat="server" Width="25" Height="25" onclick="imgbtn_Click" />
+</ItemTemplate>
+</asp:TemplateField>
+<asp:BoundField DataField="UserName" HeaderText="UserName" />
+<asp:BoundField DataField="FirstName" HeaderText="FirstName" />
+<asp:BoundField DataField="LastName" HeaderText="LastName" />
+<asp:BoundField DataField="City" HeaderText="City" />
+<asp:BoundField DataField="Designation" HeaderText="Designation" />
+</Columns>
+</asp:GridView>
+<asp:Label ID="lblresult" runat="server"/>
+<asp:Button ID="btnShowPopup" runat="server" style="display:none" />
+<asp:ModalPopupExtender ID="ModalPopupExtender1" runat="server" TargetControlID="btnShowPopup" PopupControlID="pnlpopup"
+CancelControlID="btnCancel" BackgroundCssClass="modalBackground">
+</asp:ModalPopupExtender>
+<asp:Panel ID="pnlpopup" runat="server" BackColor="White" Height="269px" Width="400px" style="display:none">
+<table width="100%" style="border:Solid 3px #D55500; width:100%; height:100%" cellpadding="0" cellspacing="0">
+<tr style="background-color:#D55500">
+<td colspan="2" style=" height:10%; color:White; font-weight:bold; font-size:larger" align="center">User Details</td>
+</tr>
+<tr>
+<td align="right" style=" width:45%">
+UserId:
+</td>
+<td>
+<asp:Label ID="lblID" runat="server"></asp:Label>
+</td>
+</tr>
+<tr>
+<td align="right">
+UserName:
+</td>
+<td>
+<asp:Label ID="lblusername" runat="server"></asp:Label>
+</td>
+</tr>
+<tr>
+<td align="right">
+FirstName:
+</td>
+<td>
+<asp:TextBox ID="txtfname" runat="server"/>
+</td>
+</tr>
+<tr>
+<td align="right">
+LastName:
+</td>
+<td>
+<asp:TextBox ID="txtlname" runat="server"/>
+</td>
+</tr>
+<tr>
+<td align="right">
+City:
+</td>
+<td>
+<asp:TextBox ID="txtCity" runat="server"/>
+</td>
+</tr>
+<tr>
+<td align="right">
+Designation:
+</td>
+<td>
+<asp:TextBox ID="txtDesg" runat="server"/>
+</td>
+</tr>
+<tr>
+<td>
+</td>
+<td>
+<asp:Button ID="btnUpdate" CommandName="Update" runat="server" Text="Update" onclick="btnUpdate_Click"/>
+<asp:Button ID="btnCancel" runat="server" Text="Cancel" />
+</td>
+</tr>
+</table>
+</asp:Panel>
+</div>
+</form>
+</body>
+</html>
+Here if you observe above code for modalpopupextender I have declared different properties to modalpopupextender now I will explain each property clearly
+
+
+ 
+
+TargetControlID - The ID of the element that activates the modal popup.
+Here I gave one button name  btnShowPopup but that button mode is in visible=false because it’s not necessary here we are triggering popup by calling show() function in button click codebehind but if we didn’t given that targetcontrolid to ModalPopupExtender it will throw error for that reason I gave target controlid.
+
+PopupControlID - The ID of the element to display as a modal popup.
+CancelControlID - The ID of the element that cancels the modal popup.
+BackgroundCssClass - The CSS class to apply to the background when the modal popup is displayed.
+ 
+After completion our aspx page design add following namespaces in codebehind
+
+C# Code
+
+
+using System;
+using System.Data;
+using System.Data.SqlClient;
+using System.Drawing;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+After completion of adding namespaces write the following code
+
+
+SqlConnection con = new SqlConnection("Data Source=Suresh;Integrated Security=true;Initial Catalog=MySampleDB");
+protected void Page_Load(object sender, EventArgs e)
+{
+if(!IsPostBack)
+{
+BindGridData();
+}
+}
+protected void BindGridData()
+{
+con.Open();
+SqlCommand cmd = new SqlCommand("Select * from Employee_Details", con);
+SqlDataAdapter da = new SqlDataAdapter(cmd);
+DataTable dt = new DataTable();
+da.Fill(dt);
+gvdetails.DataSource = dt;
+gvdetails.DataBind();
+}
+protected void btnUpdate_Click(object sender, EventArgs e)
+{
+con.Open();
+SqlCommand cmd = new SqlCommand("update Employee_Details set FirstName=@FirstName,LastName=@LastName, City=@City,Designation=@Designation where UserId=@UserId", con);
+cmd.Parameters.AddWithValue("@FirstName", txtfname.Text);
+cmd.Parameters.AddWithValue("@LastName", txtlname.Text);
+cmd.Parameters.AddWithValue("@City", txtCity.Text);
+cmd.Parameters.AddWithValue("@Designation", txtDesg.Text);
+cmd.Parameters.AddWithValue("@UserId", Convert.ToInt32(lblID.Text));
+cmd.ExecuteNonQuery();
+con.Close();
+lblresult.Text = lblusername.Text + " Details Updated Successfully";
+lblresult.ForeColor = Color.Green;
+BindGridData();
+}
+protected void imgbtn_Click(object sender, ImageClickEventArgs e)
+{
+ImageButton btndetails = sender as ImageButton;
+GridViewRow gvrow = (GridViewRow)btndetails.NamingContainer;
+lblID.Text = gvdetails.DataKeys[gvrow.RowIndex].Value.ToString();
+lblusername.Text = gvrow.Cells[1].Text;
+txtfname.Text = gvrow.Cells[2].Text;
+txtlname.Text = gvrow.Cells[3].Text;
+txtCity.Text = gvrow.Cells[4].Text;
+txtDesg.Text = gvrow.Cells[5].Text;
+this.ModalPopupExtender1.Show();
+}
+VB.NET Code
+
+
+Imports System.Data
+Imports System.Data.SqlClient
+Imports System.Drawing
+Imports System.Web.UI
+Imports System.Web.UI.WebControls
+
+Partial Class VBCode
+Inherits System.Web.UI.Page
+Private con As New SqlConnection(("Data Source=Suresh;Integrated Security=true;Initial Catalog=MySampleDB")
+Protected Sub Page_Load(ByVal sender As Object, ByVal e As EventArgs) Handles Me.Load
+If Not IsPostBack Then
+BindGridData()
+End If
+End Sub
+Protected Sub BindGridData()
+con.Open()
+Dim cmd As New SqlCommand("Select * from Employee_Details", con)
+Dim da As New SqlDataAdapter(cmd)
+Dim dt As New DataTable()
+da.Fill(dt)
+gvdetails.DataSource = dt
+gvdetails.DataBind()
+End Sub
+Protected Sub btnUpdate_Click(ByVal sender As Object, ByVal e As EventArgs)
+con.Open()
+Dim cmd As New SqlCommand("update Employee_Details set FirstName=@FirstName,LastName=@LastName, City=@City,Designation=@Designation where UserId=@UserId", con)
+cmd.Parameters.AddWithValue("@FirstName", txtfname.Text)
+cmd.Parameters.AddWithValue("@LastName", txtlname.Text)
+cmd.Parameters.AddWithValue("@City", txtCity.Text)
+cmd.Parameters.AddWithValue("@Designation", txtDesg.Text)
+cmd.Parameters.AddWithValue("@UserId", Convert.ToInt32(lblID.Text))
+cmd.ExecuteNonQuery()
+con.Close()
+lblresult.Text = lblusername.Text + " Details Updated Successfully"
+lblresult.ForeColor = Color.Green
+BindGridData()
+End Sub
+Protected Sub imgbtn_Click(ByVal sender As Object, ByVal e As ImageClickEventArgs)
+Dim btndetails As ImageButton = TryCast(sender, ImageButton)
+Dim gvrow As GridViewRow = DirectCast(btndetails.NamingContainer, GridViewRow)
+lblID.Text = gvdetails.DataKeys(gvrow.RowIndex).Value.ToString()
+lblusername.Text = gvrow.Cells(1).Text
+txtfname.Text = gvrow.Cells(2).Text
+txtlname.Text = gvrow.Cells(3).Text
+txtCity.Text = gvrow.Cells(4).Text
+txtDesg.Text = gvrow.Cells(5).Text
+Me.ModalPopupExtender1.Show()
+End Sub
+End Class
+Demo
