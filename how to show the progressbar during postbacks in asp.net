@@ -1,0 +1,101 @@
+Introduction
+
+Here I will explain how to show update progressbar during postbacks in asp.net
+
+Description
+
+In many websites we will see loading images during process of their websites how we can implement that for our website.
+
+In Ajax we have a control called UpdateProgress control by using this control we can implement progressbar during postsbacks in asp.net.
+
+Here we need to observe one point that is how we can findout postbacks and raise that progrssbar during postback operation in asp.net. Here we have chance to get postsbacks by using these statements
+
+
+Sys.WebForms.PageRequestManager.getInstance();
+Sys.WebForms.PageRequestManager.getInstance().add_beginRequest(BeginRequestHandler);
+Sys.WebForms.PageRequestManager.getInstance().add_endRequest(EndRequestHandler);
+Here I will explain what the each statement is
+
+Sys.WebForms.PageRequestManager.getInstance();
+
+This Statement Manages partial-page updates of server updatepanel controls in the browser, and defines properties, events, and methods that can be used to customize a Web page by using client script.
+
+Sys.WebForms.PageRequestManager.getInstance().add_beginRequest(BeginRequestHandler);
+
+This statement Raised before processing of an asynchronous postback starts and the postback request is sent to the server.
+
+Sys.WebForms.PageRequestManager.getInstance().add_endRequest(EndRequestHandler);
+
+This Raised after an asynchronous postback is finished and control has been returned to the browser.
+
+After that design your aspx page like this 
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+<title></title>
+<style type="text/css">
+.modalPopup
+{
+background-color: #696969;
+filter: alpha(opacity=40);
+opacity: 0.7;
+xindex:-1;
+}
+</style>
+</head>
+<body>
+<form id="form1" runat="server">
+<asp:ScriptManager ID="ScriptManager1" runat="server"/>
+<script type="text/javascript">
+var prm = Sys.WebForms.PageRequestManager.getInstance();
+//Raised before processing of an asynchronous postback starts and the postback request is sent to the server.
+prm.add_beginRequest(BeginRequestHandler);
+// Raised after an asynchronous postback is finished and control has been returned to the browser.
+prm.add_endRequest(EndRequestHandler);
+function BeginRequestHandler(sender, args) {
+//Shows the modal popup - the update progress
+var popup = $find('<%= modalPopup.ClientID %>');
+if (popup != null) {
+popup.show();
+}
+}
+
+
+ 
+
+function EndRequestHandler(sender, args) {
+//Hide the modal popup - the update progress
+var popup = $find('<%= modalPopup.ClientID %>');
+if (popup != null) {
+popup.hide();
+}
+}
+</script>
+<div>
+<asp:UpdateProgress ID="UpdateProgress" runat="server">
+<ProgressTemplate>
+<asp:Image ID="Image1" ImageUrl="waiting.gif" AlternateText="Processing" runat="server" />
+</ProgressTemplate>
+</asp:UpdateProgress>
+<ajaxToolkit:ModalPopupExtender ID="modalPopup" runat="server" TargetControlID="UpdateProgress"
+PopupControlID="UpdateProgress" BackgroundCssClass="modalPopup" />
+<asp:UpdatePanel ID="pnlData" runat="server" UpdateMode="Conditional">
+<ContentTemplate>
+<asp:Button ID="btnSubmit" runat="server" Text="Submit" onclick="btnSubmit_Click"/>
+</ContentTemplate>
+</asp:UpdatePanel>
+</div>
+</form>
+</body>
+</html> 
+In code behind button click write like this 
+
+
+protected void btnSubmit_Click(object sender, EventArgs e)
+{
+System.Threading.Thread.Sleep(2000);
+}
+Here in button click why I have used sleep statement means presently I am not doing any operations that’s why in button click I have used sleep statement to progressbar. In my demo I have implemented for user registration without this sleep statement it will raise whenever user submit his details and it will raise for each postback operation
+
+Demo
