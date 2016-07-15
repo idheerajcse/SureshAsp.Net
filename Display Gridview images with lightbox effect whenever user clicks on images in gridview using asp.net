@@ -1,0 +1,126 @@
+Introduction:
+
+In this article I will explain how to show gridview images with lightbox effect using asp.net.
+Description: 
+   
+In my previous article I explained clearly how to insert images into our images folder and images path in database and display images in gridview from folder based on imagepaths exists in database for that check this link how to insert images into folder and imagespath into database and display images I gridview .After inserting images in folder and displayed in gridview I extended functionality to display gridview images using lightbox effect if user click on any image in gridview at that time we need to show that images with lightbox effect. To display images in gridview with lightbox effect we need to design our aspx page like this
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1" runat="server">
+<title>Show Gridview Images with Lightbox effect</title>
+<style type="text/css">
+.Gridview
+{
+font-family:Verdana;
+font-size:10pt;
+font-weight:normal;
+color:black;
+}
+.black_overlay{
+display:none;
+position: absolute;
+top: 0%;
+left: 0%;
+width: 100%;
+height: 100%;
+background-color:black;
+z-index:1001;
+-moz-opacity: 0.8;
+opacity:.80;
+filter: alpha(opacity=80);
+}
+.white_content {
+display:none;
+position: absolute;
+top: 25%;
+left: 35%;
+width: 25%;
+padding: 0px;
+border: 0px solid #a6c25c;
+background-color: white;
+z-index:1002;
+overflow: auto;
+}
+.headertext{
+font-family:Arial, Helvetica, sans-serif;
+font-size:14px;
+color:#f19a19;
+font-weight:bold;
+}
+</style>
+<script type="text/javascript">
+function ShowImages() {
+document.getElementById('light').style.display = 'block';
+document.getElementById('fade').style.display = 'block'
+return false;
+}
+</script>
+</head>
+<body>
+<form id="form1" runat="server">
+<div align="center">
+<asp:GridView runat="server" ID="gvImages" AutoGenerateColumns="false"
+DataSourceID="sqldataImages" CssClass="Gridview"
+HeaderStyle-BackColor="#61A6F8">
+<Columns>
+<asp:BoundField DataField="ID" HeaderText="ID" />
+<asp:BoundField DataField="ImageName" HeaderText="Image Name" />
+<asp:TemplateField HeaderText="Image">
+<ItemTemplate>
+<asp:ImageButton ID="imgbtn" runat="server" ImageUrl='<%#Eval("ImagePath") %>' OnClick="imgbtn_Click" />
+</ItemTemplate>
+</asp:TemplateField>
+</Columns>
+</asp:GridView>
+<asp:SqlDataSource ID="sqldataImages" runat="server"  ConnectionString="<%$ConnectionStrings:dbconnection %>"
+SelectCommand="select * from ImagesPath" >
+</asp:SqlDataSource>
+</div>
+<div id="light" class="white_content">
+<table cellpadding=0 cellspacing=0 border=0 style="background-color:#a6c25c;" width="100%"><tr><td height="16px"><a href = "javascript:void(0)" onclick = "document.getElementById('light').style.display='none';document.getElementById('fade').style.display='none'"><img src="close.gif" style="border :0px"  width="13px" align="right" height="13px"/></a></td></tr>
+<tr><td style="padding-left:16px;padding-right:16px;padding-bottom:16px">
+<table align="center"  border="0" cellpadding="0" cellspacing="0" style="background-color:#fff" width="100%">
+<tr>
+<td align="center" colspan="2" class="headertext" >Gridview Image </td>
+</tr>
+<tr><td>&nbsp;</td></tr>
+<tr><td align="center">
+<asp:Image ID="imglightbox" runat="server"/>
+</td></tr>
+<tr><td height="10px"></td></tr>
+</table>
+</td></tr>
+</table>
+<div align="center" class=" headertext">
+<asp:Label ID="txtlbl" runat="server"  ></asp:Label></div>
+</div>
+<div id="fade" class="black_overlay"></div>
+</form>
+</body>
+</html>
+After completion of aspx page design write the following code in code behind
+
+
+ 
+
+
+protected void imgbtn_Click(object sender, EventArgs e)
+{
+ImageButton imgbtn = sender as ImageButton;
+GridViewRow gvrow = imgbtn.NamingContainer as GridViewRow;
+//Find Image button in gridview
+ImageButton imgbtntxt =(ImageButton)gvrow.FindControl("imgbtn");
+//Assign imagebutton url to image field in lightbox
+imglightbox.ImageUrl = imgbtn.ImageUrl;
+ScriptManager.RegisterStartupScript(Page, typeof(Page) , "ShowValidation", "javascript:ShowImages();", true);
+}
+After that set your database connection in web.config like this because we are using this connection in our sqldatasource to get the data from database
+
+
+<connectionStrings>
+<add name="dbconnection" connectionString="Data Source=SureshDasari;Integrated Security=true;Initial Catalog=MySampleDB"/>
+</connectionStrings >
+
+
+Demo
