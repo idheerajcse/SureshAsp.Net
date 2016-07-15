@@ -1,0 +1,178 @@
+Introduction: 
+
+Here I will explain how to show or display gridview row details in new popup window on hyperlink click using jQuery, JavaScript in asp.net with c#, vb.net example or jQuery to display or show gridview row details in new popup window on button / hyperlink click using JavaScript in asp.net with c#, vb.net example.
+
+Description: 
+   
+In previous articles I explained jQuery query string parameters with spaces, jQuery get query string parameter values, jQuery show gridview row details in modal popup, jQuery show gridview row details in tooltip on mouseover, Ajax modal popup to edit gridview rows in asp.net, gridview examples in asp.net and many articles relating to gridview, asp.net, c#,vb.net and jQuery, JavaScript. Now I will explain how to show gridview row details in new window popup on hyperlink click using jQuery, JavaScript in asp.net using c#, vb.net.
+
+Before implement this example first design one table productinfo in your database as shown below
+
+Column Name
+Data Type
+Allow Nulls
+productid
+Int(IDENTITY=TRUE)
+Yes
+productname
+varchar(50)
+Yes
+price
+varchar(50)
+Yes
+Once table created in database enter some dummy data to test application now open your aspx page and write the code like as shown below
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>jQuery Show Gridview Row Details in New Popup window in asp.net</title>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.8.2.js"></script>
+<script type="text/javascript">
+function openPopup(productid, productname, price) {
+window.open('newpopupwindow.aspx?productid=' + productid + '&productname=' + escape(productname) + '&price=' + price, "Popup", "width=200,height=200");
+}
+</script>
+<style type="text/css">
+.GridviewDiv {font-size: 100%; font-family: 'Lucida Grande', 'Lucida Sans Unicode', Verdana, Arial, Helevetica, sans-serif; color: #303933;}
+.headerstyle
+{
+color:#FFFFFF;border-right-color:#abb079;border-bottom-color:#abb079;background-color: #df5015;padding:0.5em 0.5em 0.5em 0.5em;text-align:center;
+}
+</style>
+</head>
+<body>
+<form id="form1" runat="server">
+<div>
+<table style="margin-top:80px;margin-left:130px">
+<tr>
+<td>
+<div class="GridviewDiv">
+<asp:GridView runat="server" ID="gvDetails" AutoGenerateColumns="false" Width="420px">
+<HeaderStyle CssClass="headerstyle" />
+<Columns>
+<asp:BoundField DataField="productid" HeaderText="Product Id" />
+<asp:BoundField DataField="productname" HeaderText="Product Name" />
+<asp:BoundField DataField="price" HeaderText="Price" />
+<asp:TemplateField>
+<ItemTemplate>
+<a href="#" class="gridViewToolTip" onclick='openPopup("<%# Eval("productid")%>","<%# Eval("productname")%>","<%# Eval("price")%>")'>test</a>
+</ItemTemplate>
+</asp:TemplateField>
+</Columns>
+</asp:GridView>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</form>
+</body>
+</html>
+
+
+ 
+
+After completion of aspx page add following namespaces in codebehind
+
+C# Code
+
+
+using System;
+using System.Web.UI.WebControls;
+using System.Data;
+using System.Data.SqlClient;
+
+After completion of adding namespaces you need to write the code like as shown below
+
+
+protected void Page_Load(object sender, EventArgs e)
+{
+if (!IsPostBack)
+{
+BindGridview();
+}
+}
+protected void BindGridview()
+{
+DataSet ds = new DataSet();
+using (SqlConnection con = new SqlConnection("Data Source=Suresh;Integrated Security=true;Initial Catalog=MySampleDB"))
+{
+con.Open();
+SqlCommand cmd = new SqlCommand("select * from productinfo", con);
+SqlDataAdapter da = new SqlDataAdapter(cmd);
+da.Fill(ds);
+con.Close();
+gvDetails.DataSource = ds;
+gvDetails.DataBind();
+}
+}
+
+VB.NET Code
+
+
+Imports System.Web.UI.WebControls
+Imports System.Data
+Imports System.Data.SqlClient
+Partial Class VBCode
+Inherits System.Web.UI.Page
+Protected Sub Page_Load(ByVal sender As Object, ByVal e As EventArgs) Handles Me.Load
+If Not IsPostBack Then
+BindGridview()
+End If
+End Sub
+Protected Sub BindGridview()
+Dim ds As New DataSet()
+Using con As New SqlConnection("Data Source=Suresh;Integrated Security=true;Initial Catalog=MySampleDB")
+con.Open()
+Dim cmd As New SqlCommand("select * from productinfo", con)
+Dim da As New SqlDataAdapter(cmd)
+da.Fill(ds)
+con.Close()
+gvDetails.DataSource = ds
+gvDetails.DataBind()
+End Using
+End Sub
+End Class
+
+If you observe above aspx page JavaScript code we included “newpopupwindow.aspx” to open our gridview row details in new window for that we need to create one new page
+Right Click on Application à Select Add New Item à Select aspx page give name “newpopupwindow.aspx” and click OK
+
+Now open “newpopupwindow.aspx” page and write the following code to get gridview row details
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+<title>jQuery Show Gridview Row Details in new window</title>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.8.2.js"></script>
+<script type="text/javascript">
+$(function () {
+var id = GetParameterValues('productid');
+var name = GetParameterValues('productname');
+var price = GetParameterValues('price');
+$('#lblId').html('<strong>' + id + '</strong>');
+$('#lblName').html('<strong>' + name + '</strong>');
+$('#lblPrice').html('<strong>' + price + '</strong>');
+});
+function GetParameterValues(param) {
+var url = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+for (var i = 0; i < url.length; i++) {
+var urlparam = url[i].split('=');
+if (urlparam[0] == param) {
+return decodeURIComponent(urlparam[1]);
+}
+}
+}
+</script>
+</head>
+<body>
+<form id="form1" runat="server">
+<div>
+Product Id: <label id="lblId"></label><br />
+Product Name: <label id="lblName"></label><br />
+Price: <label id="lblPrice"></label>
+</div>
+</form>
+</body>
+</html>
+
+Now run your application and check output that would be like as shown below
