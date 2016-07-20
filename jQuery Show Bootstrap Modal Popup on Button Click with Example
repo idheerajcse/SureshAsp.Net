@@ -1,0 +1,68 @@
+jQuery Show Bootstrap Modal Popup on Button Click with Example
+By: Suresh Dasari Jul 14, 2016
+Categories: Bootstrap , JQuery , Modalpopup
+ 
+ 
+Introduction: 
+
+Here I will explain how to use jQuery to show bootstrap modal popup on button click with example or jQuery open bootstrap modal popup on button click with example or open / show bootstrap modal popup window using jQuery with example. By using “modal” property we can show bootstrap modal popup on button click easily using jQuery with example.
+
+Description: 
+   
+In previous articles I explained disable / prevent closing modal popup when click outside, show jquery ui modal popup on button click example, jQuery show gridview row details in modal popup example, jQuery show gridview in modal popup example, jQuery show gridview row details in tooltip on mouseover example, Bootstrap dropdownlist with checkboxes in jQuery and many articles relating to modal popup, bootstrap, css, AngularJS, jQuery, JavaScript and asp.net. Now I will explain how to show bootstrap modal popup on button click using jQuery with example.
+
+To show bootstrap modal popup on button click in jQuery we need to write the code like as shown below.
+
+
+<script type="text/javascript">
+$(function () {
+$("#btnShow").click(function(){
+$('#demoModal').modal('show');
+});
+});
+</script>
+
+If you want complete code to show bootstrap modal popup on button click in jQuery open your application and write the code like as shown below
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>jQuery show bootstrap modal popup on button click</title>
+<script type="text/javascript" src="//code.jquery.com/jquery-1.10.2.js"></script>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" >
+
+
+ 
+
+<script type="text/javascript">
+$(function () {
+$("#btnShow").click(function(){
+$('#demoModal').modal('show');
+});
+});
+</script>
+</head>
+<body>
+<!--Button to Trigger Modal-->
+<div style="text-align:center; margin-top:10%">
+<button id="btnShow" class="btn btn-primary btn-lg">Show Modal Popup</button>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="demoModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal-dialog">
+<div class="modal-content">
+<div class="modal-header">
+<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+<h4 class="modal-title" id="myModalLabel">Bootstrap Modal Popup</h4>
+</div>
+<div class="modal-body">Hi, Welcome to Aspdotnet-Suresh.com</div>
+<div class="modal-footer">
+<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+<button type="button" class="btn btn-primary">Save changes</button>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>
