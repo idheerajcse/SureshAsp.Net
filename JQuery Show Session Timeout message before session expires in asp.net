@@ -1,0 +1,86 @@
+JQuery Show Session Timeout message before session expires in asp.net
+By: Suresh Dasari Jun 23, 2012
+Categories: Asp.net , General , JQuery , Session Timeout
+ 
+ 
+Introduction: 
+
+In this article I will explain how to show session timeout message before session expires or redirect to login page when user inactive on website using JQuery in asp.net.
+
+Description: 
+   
+In previous article I explained show alert message when user idle or inactive on website using JQuery. I am using that concept here to show session timeout message before session expires when user idle or inactive on website using JQuery in asp.net.
+
+Generally in banking sites if we stay idle for sometime automatically we will get alert like your session is going to expire and it will show options like do you want to continue or Signout. Whenever we click on continue our session will active in that site without any session expire if we click on Sign Out option it will signout from that site and return to home page. We can implement this functionality easily by using available JQuery plug-in.
+
+For that First open Visual Studio and create new website after that right click on your website and add new folder and give name as JS and insert script files in folder you should get it from attached folder same way add another new folders CSS and images and insert required css and images files in respective folders you should get it from attached folder. After that write the following code in your aspx page 
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+<title>JQuery Show session timeout message before session expires in asp.net Page</title>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.js"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1/jquery-ui.js"></script>
+<script type="text/javascript" src="js/jquery.idle-timer.js"></script>
+<script type="text/javascript" src="js/timeout-dialog.js"></script>
+<link rel="stylesheet" href="css/index.css" type="text/css" media="screen, projection" />
+<link rel="stylesheet" href="css/timeout-dialog.css" type="text/css" media="screen, projection" />
+<script type="text/javascript">
+
+$(function() {
+var timeout = 60000;
+$(document).bind("idle.idleTimer", function() {
+// function you want to fire when the user goes idle
+$.timeoutDialog({ timeout: 1, countdown: 60, logout_redirect_url: 'http://www.aspdotnet-suresh.com', restart_on_yes: true });
+});
+$(document).bind("active.idleTimer", function() {
+// function you want to fire when the user becomes active again
+});
+$.idleTimer(timeout);
+});
+
+</script>
+</head>
+<body>
+<form id="form1" runat="server">
+<div>
+<h1>Aspdotnet-Suresh.Com</h1><b>Show session timeout message before session expires when user idle on website for 5 secs in asp.net</b>
+</div>
+</form>
+</body>
+</html>
+
+
+ 
+
+If you observe above code in header section I added some of script files and css files by using those files we have a chance to show session timeout message when user idle for more than 5 secs (Here I taken 5 sec time you can change it based on your requirement) on website using JQuery in asp.net and you can get those files from attached folder.
+
+In header section if you observe we have a function timeoutDialog() that one we are using to show session timeout popup you can get that function details from timeout-dialog.js file and check below parameters details which are belonging to timeoutDialog() function
+
+timeout: The number of your session timeout (in seconds). The timeout value minus the countdown value determines how long until the dialog appears.
+
+Countdown: The countdown total value (in seconds).
+
+Title: 'Your session is about to expire!' The title message in the dialog box.
+
+Message: 'You will be logged out in {0} seconds.' The countdown message where {0} will be used to enter the countdown value.
+
+Question: 'Do you want to stay signed in?' The question message if they want to continue using the site or not.
+
+keep_alive_button_text: 'Yes, Keep me signed in' The text of the YES button to keep the session alive.
+
+sign_out_button_text: 'No, Sign me out' The text of the NO button to kill the session.
+
+keep_alive_url: '/keep-alive' The url that will perform a GET request to keep the session alive. This GET expects a 'OK' plain HTTP response.
+
+logout_url: 'null' The url that will perform a POST request to kill the session. If no logout_url is defined it will just redirect to the url defined in logout_redirect_url.
+
+logout_redirect_url: '/' The redirect url after the logout happens, usually back to the login url. It will also contain a next query param with the url that they were when timedout and a timeout=t query param indicating if it was from a timeout, this value will not be set if the user clicked the 'No, Sign me out' button.
+
+restart_on_yes: 'true' A boolean value that indicates if the countdown will restart when the user clicks the 'keep session alive' button.
+
+dialog_width: '350' The width of the dialog box.
+
+Now run your application and check the output.
+
+Demo
