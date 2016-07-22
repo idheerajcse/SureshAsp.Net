@@ -1,0 +1,106 @@
+http://www.aspdotnet-suresh.com/2012/04/aspnet-integrate-facebook-login.html
+Asp.net integrate Facebook login authentication to website
+By: Suresh Dasari Apr 21, 2012
+Categories: Asp.net , Facebook , General
+ 
+ 
+Introduction: 
+
+Here I will explain how to add facebook login website in asp.net or integrate facebook login button to website in asp.net and how to create application in facebook.
+
+Description: 
+   
+In previous post I explained many articles relating to Asp.net, JQuery, and SQLServer etc. Now I will explain how to allow users to login with facebook accounts in website using asp.net.
+
+Before implement facebook login authentication we need to create the facebook application for that open this link http://developers.facebook.com/setup/ once open that will display window like this
+
+
+In this enter Application Name and click Continue here App Namespace and web hosting both are optional. After enter details and click Continue to display Security Check required screen like this
+
+ 
+Enter security text and click submit button once we click it will create application in facebook that would be like this 
+
+ 
+Once our app created on facebook that will be like as shown above image now we can change logo of our app and icon of our application. After that we need to add Site URL, Canvas URL that would be the url of your site (Ex: http://aspdotnet-suresh.com) which site you are going to integrated login button. Actually facebook has stopped support for localhost sites (ex: http://localhost/Default.aspx) because of that we need to give hosted domain site url. 
+
+If you want to test this with your local application no worries check this post how host website in IIS with custom URL
+
+After we made all the changes that would be like this 
+
+ 
+Once you entered all the details click save changes button. Now create new application using visual studio and write following code aspx page
+
+<html>
+<head>
+<title>Facebook Login Authentication Example</title>
+<script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
+</head>
+<body>
+<script>
+// Load the SDK Asynchronously
+(function(d) {
+var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
+if (d.getElementById(id)) { return; }
+js = d.createElement('script'); js.id = id; js.async = true;
+js.src = "//connect.facebook.net/en_US/all.js";
+ref.parentNode.insertBefore(js, ref);
+} (document));
+
+// Init the SDK upon load
+window.fbAsyncInit = function() {
+FB.init({
+appId: '198191300293654', // App ID
+channelUrl: '//' + window.location.hostname + '/channel', // Path to your Channel File
+status: true, // check login status
+cookie: true, // enable cookies to allow the server to access the session
+xfbml: true  // parse XFBML
+});
+
+
+ 
+
+// listen for and handle auth.statusChange events
+FB.Event.subscribe('auth.statusChange', function(response) {
+if (response.authResponse) {
+// user has auth'd your app and is logged into Facebook
+FB.api('/me', function(me) {
+if (me.name) {
+document.getElementById('auth-displayname').innerHTML = me.name;
+}
+})
+document.getElementById('auth-loggedout').style.display = 'none';
+document.getElementById('auth-loggedin').style.display = 'block';
+} else {
+// user has not auth'd your app, or is not logged into Facebook
+document.getElementById('auth-loggedout').style.display = 'block';
+document.getElementById('auth-loggedin').style.display = 'none';
+}
+});
+$("#auth-logoutlink").click(function() { FB.logout(function() { window.location.reload(); }); });
+}
+</script>
+<h1>
+Facebook Login Authentication Example</h1>
+<div id="auth-status">
+<div id="auth-loggedout">
+
+<div class="fb-login-button" autologoutlink="true" scope="email,user_checkins">Login with Facebook</div>
+</div>
+<div id="auth-loggedin" style="display: none">
+Hi, <span id="auth-displayname"></span>(<a href="#" id="auth-logoutlink">logout</a>)
+</div>
+</div>
+</body>
+</html>
+If you observe header section I added one script file that is used to handle click function using JQuery and in body I written another script in that
+
+FB.init: This function is used to set authentication statuses.
+
+FB.api: This function is used to get authenticated user details.
+In above code you need to make small modification that is need to give your appId in FB.init function (appId: ‘YOUR APP ID’).
+
+(Note: Script function should be under <body> tag only)
+
+ Now run your application and check the output that would be like this
+
+Demo
