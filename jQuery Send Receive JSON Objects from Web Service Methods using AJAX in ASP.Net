@@ -1,0 +1,106 @@
+Here I will explain how to send and receive JSON objects from web services methods using jQuery ajax in asp.net using c#, vb.net with example. To send or receive JSON objects from web services methods in jQuery we need to create function which hold our object values in asp.net using c#, vb.net.
+
+Description: 
+   
+In previous articles I explained jQuery get json response from url in asp.net, call web methods from jquery json functions in asp.net, bind gridview using jquery json method in asp.net, show multiple markers in google map from database in asp.net and many articles relating to gridview, asp.net, c#,vb.net and jQuery. Now I will explain how to send or receive JSON objects from web services methods using jQuery ajax methods in asp.net using c#, vb.net with example.
+
+To send, receive JSON objects from web services methods using jQuery ajax methods in asp.net open your aspx page and write the following code
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.8.2.js"></script>
+<script type="text/javascript">
+$(function () {
+$('#btnSend').click(function () {
+var product = {Name : 'Oneplus One',Price : 22000}
+$.ajax({
+type: "POST",
+contentType: "application/json; charset=utf-8",
+data: "{product:" + JSON.stringify(product) + "}",
+url: "SendJSONObject.aspx/GetData",
+dataType: "json",
+success: function (data) {
+alert('Product Name: '+data.d.Name+"; Price: "+data.d.Price)
+},
+error: function (result) {
+alert("Something Went Wrong");
+}
+});
+})
+});
+</script>
+</head>
+<body>
+<form id="form1">
+<div align=center><br />
+<input type="button" id="btnSend" value="Send & Receive JSON Object" />
+</div>
+</form>
+</body>
+</html>
+
+
+ 
+
+After completion of aspx page add following namespaces in codebehind
+
+C# Code
+
+
+using System;
+using System.Web.Services;
+
+After completion of adding namespaces you need to write the code like as shown below
+
+
+protected void Page_Load(object sender, EventArgs e)
+{
+}
+[WebMethod]
+public static Product GetData(Product product)
+{
+return product;
+}
+public class Product {
+public string Name { get; set; }
+public int Price { get; set; }
+}
+
+VB.NET Code
+
+
+Imports System.Web.Services
+
+Partial Class VBCode
+Inherits System.Web.UI.Page
+Protected Sub Page_Load(sender As Object, e As EventArgs)
+End Sub
+<WebMethod()> _
+Public Shared Function GetData(ByVal product As Product) As Product
+Return product
+End Function
+
+Public Class Product
+Public Property Name() As String
+Get
+Return m_Name
+End Get
+Set(ByVal value As String)
+m_Name = Value
+End Set
+End Property
+Private m_Name As String
+Public Property Price() As Integer
+Get
+Return m_Price
+End Get
+Set(ByVal value As Integer)
+m_Price = Value
+End Set
+End Property
+Private m_Price As Integer
+End Class
+End Class
+
+Demo
