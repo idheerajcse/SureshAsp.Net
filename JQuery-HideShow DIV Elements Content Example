@@ -1,0 +1,78 @@
+JQuery Hide/Show DIV Elements Content Example
+By: Suresh Dasari Apr 5, 2012
+Categories: JQuery , JQuery Plugins
+ 
+ 
+Introduction:
+
+Here I will explain how to show / hide div using jQuery or jQuery Show & hide div content elements using JQuery in asp.net.
+
+Description: 
+   
+In previous post I explained many articles relating to JQuery. Now in this article I will explain how to show or hide div or table elements on website using JQuery in asp.net. In many websites we will be able to see functionality like whenever we click on some link automatically that div or table will hide and again if we click on same link that will be visible for us we can implement that functionality by using JQuery
+Previously I wrote one post Ajax Collapsible panel sample in asp.net to show panel when click on down arrow and when we click on up arrow that panel will collapse automatically. Now I am using JQuery to show or hide div or panel or table elements in asp.net.
+
+First open Visual Studio and create new website after that write following code in your aspx page 
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+<title>JQuery Show / Hide Div panels in asp.net</title>
+<script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+$("#lnkbtn").click(function() {
+if ($('#divreg').is(":hidden")) {
+$('#divreg').show(500);
+document.getElementById('lnkbtn').innerHTML = "Hide";
+} else {
+$("#divreg").hide(500);
+document.getElementById('lnkbtn').innerHTML="Show";
+}
+});
+});
+</script>
+</head>
+<body>
+<form id="form1" runat="server">
+<table>
+<tr>
+<td><asp:LinkButton ID="lnkbtn" runat="server"><b>Hide</b></asp:LinkButton> </td>
+</tr>
+<tr>
+<td>
+<div id="divreg">
+<table style="border:1px solid #000">
+<tr>
+<td colspan="2"><b>Registration Details</b></td>
+</tr>
+<tr>
+<td>UserName:</td>
+<td><asp:TextBox ID="txtUser" runat="server"/></td>
+</tr>
+<tr>
+<td>Password:</td>
+<td><asp:TextBox ID="TextBox1" runat="server"/></td>
+</tr>
+<tr>
+<td><asp:RadioButtonList ID="rdbtnGender" runat="server">
+<asp:ListItem>Male</asp:ListItem>
+<asp:ListItem>Female</asp:ListItem>
+</asp:RadioButtonList></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+</form>
+</body>
+</html>
+If you observe above code in header section I added one script file by using that file we can show or hide div or table content elements using JQuery.
+
+
+ 
+
+If you observe header section in that I used hide() and show() functions in Jquery to display or hide div content elements in asp.net. In hide and show functions I declared number 200 that is used to run animation for that particular time (Note: Time in milliseconds)
+
+Demo
