@@ -1,0 +1,62 @@
+JQuery Open Close Modal Popup Window on Click Example
+By: Suresh Dasari Aug 19, 2015
+Categories: JQuery , jQuery UI , Modalpopup
+ 
+ 
+Introduction: 
+
+Here I will explain open or close simple jQuery ui modal popup window on button click with example or show hide modal popup window using jQuery ui plugin modal popup features or open close jQuery modal popup window on button click with example.
+
+Description: 
+   
+In previous articles I explained jquery show popup window during pageload, jquery simple modal popup window example, jQuery show alert message while leaving from website, jQuery enable / disable controls on page, jQuery Countdown timer script example and many articles relating to JQuery and asp.net. Now I will explain how to implement simple jQuery ui modal popup window example.
+
+To implement simple modal popup window we need to write the code like as shown below
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>jQuery Show Modal Popup from code behind or server side</title>
+<link type="text/css" rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.8.2.js"></script>
+<script type="text/javascript" src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+<script type="text/javascript">
+$(function() {
+$('#btnclick').click(function() {
+$("#popupdiv").dialog({
+title: "jQuery Popup from Server Side",
+width: 430,
+height: 250,
+modal: true,
+buttons: {
+Close: function() {
+$(this).dialog('close');
+}
+}
+});
+});
+})
+</script>
+</head>
+<body>
+<form id="form1">
+<div>
+<div id="popupdiv" title="Basic modal dialog" style="display: none">
+<b> Welcome to Aspdotnet-Suresh.com</b>
+</div>
+<table align="center" style="margin-top:200px">
+<tr>
+<td>
+<input type="button" id="btnclick" value="Show Modal Popup" />
+</td>
+</tr>
+</table>
+</div>
+</form>
+</body>
+</html>
+
+ 
+
+
+Demo
