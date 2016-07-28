@@ -1,0 +1,81 @@
+Introduction:
+
+Here I will explain how to use jQuery to show hide div element on scroll position or show hide div on scroll position in jQuery or show / hide element on scroll jQuery. In jQuery by using window.scroll property we can show or hide div element based on position.
+
+Description: 
+   
+In previous articles I explained jQuery show / hide div when checkbox is checked (selected), jQuery show / hide / toggle div example, jQuery show / hide loading image in autocomplete textbox, jQuery hide div if we click outside of it example, jQuery show images in 360 degree view plugins and many articles relating to css, AngularJS, jQuery, JavaScript and asp.net. Now I will explain how to show or hide div on scroll position in jQuery with example.
+
+To show or hide div on scroll position in jQuery we need to write the code like as shown below
+
+
+<script type="text/javascript">
+$(function () {
+$(window).scroll(function(){
+var scroll = $(window).scrollTop();
+if (scroll >= 57) {
+$('#testdiv').hide()
+}
+else{
+$('#testdiv').show();
+}
+});
+})
+</script>
+
+Here if you observe above syntax we are hiding div if scroll position greater than 57 otherwise we are showing div.
+
+If you want to check it in complete example you need to write the code like as shown below
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>jQuery show Hide Div on Scroll example</title>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.10.2.js"></script>
+<script type="text/javascript">
+$(function () {
+$(window).scroll(function(){
+var scroll = $(window).scrollTop();
+if (scroll >= 57) {
+$('#testdiv').hide()
+$('#hidediv').show()
+}
+else{
+$('#testdiv').show();
+$('#hidediv').hide()
+}
+});
+})
+</script>
+<style type="text/css">
+.content
+{
+border: 2px solid Red;
+color: #008000;
+padding: 10px;
+width: 400px;
+font-family:Calibri;
+font-size:16pt
+}
+</style>
+</head>
+<body>
+<form id="form1">
+<h2>jQuery show Hide Div on Scroll example</h2>
+<div style="height:50px"></div>
+<div id="testdiv" class="content" >
+Welcome to Aspdotnet-Suresh.com<br />
+Welcome to Aspdotnet-Suresh.com<br />
+Welcome to Aspdotnet-Suresh.com<br />
+Welcome to Aspdotnet-Suresh.com<br />
+</div>
+<div id="hidediv" class="content" style="display:none">Div Hided on Scroll</div>
+<div style="height:500px"></div>
+</form>
+</body>
+</html>
+
+
+ 
+
+Demo
