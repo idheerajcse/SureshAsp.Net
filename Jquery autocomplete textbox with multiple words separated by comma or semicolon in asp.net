@@ -1,0 +1,180 @@
+Introduction: 
+
+In this article I will explain how to implement JQuery UI autocomplete textbox with multiple words or values with comma separated or semi colon separated in asp.net.
+Description: 
+
+In previous articles I explained JQuery autocomplete textbox with asp.net and JQuery autocomplete textbox with images in asp.net and many articles relating to JQuery. Now I will explain how to implement autocomplete textbox with multiple word selection in asp.net.
+To implement this concept first we need to design table in database to save user details in database.
+
+Column Name
+Data Type
+Allow Nulls
+UserId
+int(set identity property=true)
+No
+UserName
+varchar(50)
+Yes
+Location
+nvarchar(max)
+Yes
+After completion table design enter some of user details in database to work for our sample.
+Write the following code in your aspx page
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1" runat="server">
+<title>AutoComplete Box with jQuery</title>
+<link href="css/ui-lightness/jquery-ui-1.8.21.custom.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.1/jquery-ui.min.js"></script> 
+<script type="text/javascript">
+$(document).ready(function() {
+SearchText();
+});
+function SearchText() {
+$("#txtSearch").autocomplete({
+source: function(request, response) {
+$.ajax({
+type: "POST",
+contentType: "application/json; charset=utf-8",
+url: "Default.aspx/GetAutoCompleteData",
+data: "{'username':'" + extractLast(request.term) + "'}",
+dataType: "json",
+success: function(data) {
+response(data.d);
+},
+error: function(result) {
+alert("Error");
+}
+});
+},
+focus: function() {
+// prevent value inserted on focus
+return false;
+},
+select: function(event, ui) {
+var terms = split(this.value);
+// remove the current input
+terms.pop();
+// add the selected item
+terms.push(ui.item.value);
+// add placeholder to get the comma-and-space at the end
+terms.push("");
+this.value = terms.join(", ");
+return false;
+}
+});
+$("#txtSearch").bind("keydown", function(event) {
+if (event.keyCode === $.ui.keyCode.TAB &&
+$(this).data("autocomplete").menu.active) {
+event.preventDefault();
+}
+})
+function split(val) {
+return val.split(/,\s*/);
+}
+function extractLast(term) {
+return split(term).pop();
+}
+}
+</script>
+</head>
+<body>
+<form id="form1" runat="server">
+<div class="demo">
+<div class="ui-widget">
+<label for="tbAuto">Enter UserName: </label>
+<asp:TextBox ID="txtSearch" runat="server" Width="300px"></asp:TextBox>
+</div>
+</form>
+</body>
+</html>
+If you observe above code in header section I added some of script and css files by using those files we have a chance to implement autocomplete textbox with multiple values selection in asp.net. To get those files download attached folder and add the urls mentioned in header section to your application
+
+
+ 
+
+Another thing here we need to know is script functions in header section
+
+$("#txtSearch").autocomplete({
+source: function(request, response) {
+$.ajax({
+type: "POST",
+contentType: "application/json; charset=utf-8",
+url: "Default.aspx/GetAutoCompleteData",
+data: "{'username':'" + extractLast(request.term) + "'}",
+dataType: "json",
+success: function(data) {
+response(data.d);
+},
+error: function(result) {
+alert("Error");
+}
+});
+This is the function declaration of JSON format we are using this JSON function to call web methods using JQuery $.ajax() whenever we need to make Ajax call with JQuery then we will use JSON functions like as we mentioned in above format. If you want to know more about it check these posts call pagemethods with JSON and autocomplete textbox with Jquery.
+
+Now open code behind file and add following namespaces
+
+
+using System;
+using System.Collections.Generic;
+using System.Data.SqlClient;
+using System.Web.Services;
+After that write the following code
+
+C#.NET Code
+
+protected void Page_Load(object sender, EventArgs e)
+{
+
+}
+[WebMethod]
+
+public static List<string> GetAutoCompleteData(string username)
+{
+List<string> result = new List<string>();
+using (SqlConnection con = new SqlConnection("Data Source=SureshDasari;Integrated Security=true;Initial Catalog=MySampleDB"))
+{
+using (SqlCommand cmd = new SqlCommand("select DISTINCT UserName from UserInformation where UserName LIKE '%'+@SearchText+'%'", con))
+{
+con.Open();
+cmd.Parameters.AddWithValue("@SearchText", username);
+SqlDataReader dr = cmd.ExecuteReader();
+while (dr.Read())
+{
+result.Add(dr["UserName"].ToString());
+}
+return result;
+}
+}
+}
+VB.NET Code:
+
+
+Imports System.Collections.Generic
+Imports System.Data.SqlClient
+Imports System.Web.Services
+
+Partial Class Default
+Inherits System.Web.UI.Page
+Protected Sub Page_Load(ByVal sender As Object, ByVal e As EventArgs) Handles Me.Load
+
+End Sub
+
+<WebMethod()> _
+Public Shared Function GetAutoCompleteData(ByVal username As String) As List(Of String)
+Dim result As New List(Of String)()
+Using con As New SqlConnection("Data Source=SureshDasari;Integrated Security=true;Initial Catalog=MySampleDB")
+Using cmd As New SqlCommand("select DISTINCT UserName from UserInformation where UserName LIKE '%'+@SearchText+'%'", con)
+con.Open()
+cmd.Parameters.AddWithValue("@SearchText", username)
+Dim dr As SqlDataReader = cmd.ExecuteReader()
+While dr.Read()
+result.Add(dr("UserName").ToString())
+End While
+Return result
+End Using
+End Using
+End Function
+End Class
+Now run your application and check the output that would be like this  
