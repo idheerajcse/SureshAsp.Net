@@ -1,0 +1,132 @@
+Introduction:
+
+In this article I will explain how to display images with auto complete search in asp.net using JQuery.
+
+Description: 
+   
+In previous posts I explained many articles relating to JQuery. Now I will explain another article relating to JQuery. If we search for user in facebook we will get user name with image. After seen that search I decided to write a post to implement auto complete search with images in asp.net.
+To implement this concept first we need to design table in database to save user and image details in database.
+
+Column Name
+Data Type
+Allow Nulls
+UserId
+int(set identity property=true)
+No
+UserName
+varchar(50)
+Yes
+ImageName
+nvarchar(max)
+Yes
+ After completion table design I am using previous post save images in folder and images path in database using asp.net to save user and image details in database. After insertion of user details in database that data would be like this
+ 
+Now create new website using visual studio and Right click on your website >> select Add New Item >> Select Generic Handler and give name as Search.ashx (Here I am using this name to connect with JQuery. If you want different name then change it in your aspx page also). After that write the following code in generic handler file (Search.ashx) 
+C# Code
+<%@ WebHandler Language="C#" Class="Search" %>
+using System;
+using System.Data.SqlClient;
+using System.Text;
+using System.Web;
+public class Search : IHttpHandler {
+public void ProcessRequest (HttpContext context)
+{
+string searchText = context.Request.QueryString["q"];
+SqlConnection con = new SqlConnection("Data Source=SureshDasari; Integrated Security=true; Initial Catalog=MySampleDB");
+con.Open();
+SqlCommand cmd = new SqlCommand("select UserId,UserName,ImageName from UserImageDetails where UserName Like @Search + '%'", con);
+cmd.Parameters.AddWithValue("@Search",searchText);
+StringBuilder sb = new StringBuilder();
+using(SqlDataReader dr=cmd.ExecuteReader())
+{
+while(dr.Read())
+{
+sb.Append(string.Format("{0},{1}{2}",dr["UserName"],dr["ImageName"],Environment.NewLine));
+}
+}
+con.Close();
+context.Response.Write(sb.ToString());
+}
+public bool IsReusable
+{
+get
+{
+return false;
+}
+}
+}
+If you observe above code this http handler accepts request from JQuery in a Query string parameter “q”. By passing query string parameter as search text and get user details based on that search text.
+VB.NET Code
+<%@ WebHandler Language="VB" Class="Search" %>
+
+Imports System.Data.SqlClient
+Imports System.Text
+Imports System.Web
+
+Public Class Search
+Implements IHttpHandler
+
+Public Sub ProcessRequest(ByVal context As HttpContext) Implements IHttpHandler.ProcessRequest
+Dim searchText As String = context.Request.QueryString("q")
+Dim con As New SqlConnection("Data Source=SureshDasari; Integrated Security=true; Initial Catalog=MySampleDB")
+con.Open()
+Dim cmd As New SqlCommand("select UserId,UserName,ImageName from UserImageDetails where UserName Like @Search + '%'", con)
+cmd.Parameters.AddWithValue("@Search", searchText)
+Dim sb As New StringBuilder()
+Using dr As SqlDataReader = cmd.ExecuteReader()
+While dr.Read()
+sb.Append(String.Format("{0},{1}{2}", dr("UserName"), dr("ImageName"), Environment.NewLine))
+End While
+End Using
+con.Close()
+context.Response.Write(sb.ToString())
+End Sub
+
+
+ 
+
+Public ReadOnly Property IsReusable() As Boolean Implements IHttpHandler.IsReusable
+Get
+Return False
+End Get
+End Property
+End Class
+After completion of write code in HttpHandler add following code in your aspx page
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+<title>Untitled Page</title>
+<link href="css/jquery.autocomplete.css" rel="stylesheet" type="text/css" />
+<script src="scripts/jquery-1.4.1.min.js" type="text/javascript"></script>
+<script src="scripts/jquery.autocomplete.js" type="text/javascript"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+$("#<%=txtSearch.ClientID%>").autocomplete("Search.ashx", {
+width: 200,
+formatItem: function(data, i, n, value) {
+return "<img style = 'width:50px;height:50px' src= Images/" + value.split(",")[1] + "'/> " + value.split(",")[0];
+},
+formatResult: function(data, value) {
+return value.split(",")[0];
+}
+});
+});
+</script>
+</head>
+<body>
+<form id="form1" runat="server">
+<div>
+<asp:TextBox ID="txtSearch" runat="server" Width = "195"></asp:TextBox>
+</div>
+</form>
+</body>
+</html>
+If you observe above code in header section I added some of script and css files by using those files we have a chance to display auto complete text with images. To get those files download attached sample code and use it in your application.
+
+Another thing here we need to know is script function in header section
+
+$("#<%=txtSearch.ClientID%>").autocomplete("Search.ashx",
+Here I given textbox control id and path of handler by using these details we will display auto complete with images for particular textbox.
+
+Now run your application check the output that would be like this  
+
+Demo:
