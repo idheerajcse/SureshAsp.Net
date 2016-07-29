@@ -1,0 +1,154 @@
+Introduction: 
+
+Here I will explain how to use jQuery to implement bootstrap autocomplete textbox without typeheadjs in asp.net using c#, vb.net or bootstrap autocomplete textbox example in asp.net using c#, vb.net.
+
+Description: 
+   
+In previous articles I explained Bootstrap dropdownlist with checkboxes in jQuery, Bootstrap set particular tab opened in jQuery, jQuery autocomplete textbox with multiple words in asp.net, jQuery autocomplete with images in asp.net, jQuery slideup, slidedown, slidetoggle effects example and many articles relating to autocomplete, bootstrap, css, AngularJS, jQuery, JavaScript and asp.net. Now I will explain how to implement bootstrap autocomplete textbox without typeheadjs in asp.net using c#, vb.net with example.
+
+Before implement this example first design one table userdetails in your database like as shown below
+
+Column Name
+Data Type
+Allow Nulls
+Userid
+Int(IDENTITY=TRUE)
+No
+Username
+varchar(50)
+Yes
+Education
+varchar(50)
+Yes
+Location
+varchar(50)
+Yes
+Once we design table in our database insert some dummy data in your table to use it in our application that would be like as shown below
+
+Sample User Details table for bootstrap autocomplete textbox example in asp.net
+Now open your aspx page and write the code like as shown below
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Bootstrap Autocomplete Textbox Example without using Typehead.js</title>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<link rel = "Stylesheet" href = "https://twitter.github.io/typeahead.js/css/examples.css"></link>
+<script type="text/javascript">
+$(function () {
+$('#txtSearch').keyup(function () {
+$.ajax({
+url: "BootstrapAutoComplete.aspx/GetAutoCompleteData",
+data: "{'username':'" + $('#txtSearch').val() + "'}",
+dataType: "json",
+type: "POST",
+contentType: "application/json; charset=utf-8",
+success: function (data) {
+var val = '<ul id="userlist">';
+$.map(data.d, function (item) {
+var itemval = item.split('/')[0];
+val += '<li class=tt-suggestion>' + itemval + '</li>'
+})
+val += '</ul>'
+$('#divautocomplete').show();
+$('#divautocomplete').html(val);
+$('#userlist li').click(function () {
+$('#txtSearch').val($(this).text());
+$('#divautocomplete').hide();
+})
+},
+error: function (response) {
+alert(response.responseText);
+}
+});
+})
+$(document).mouseup(function (e) {
+var closediv = $("#divautocomplete");
+if (closediv.has(e.target).length == 0) {
+closediv.hide();
+}
+});
+});
+</script>
+<style type="text/css">
+ul li
+{
+list-style: none;
+}
+</style>
+</head>
+<body>
+<form id="form1" runat="server">
+<div style="position: absolute;left: 18%; z-index: 100; text-align:left;">
+<input type="text" class="typeahead" id="txtSearch" placeholder="Type username to search" autocomplete="off" />
+<div id="divautocomplete" class="tt-menu" style="display:none">
+</div>
+</div>
+</form>
+</body>
+</html>
+
+
+ 
+
+Now add following namespaces in code behind
+
+C# Code
+
+
+using System;
+using System.Collections.Generic;
+using System.Web.Services;
+using System.Data.SqlClient;
+
+After completion of adding namespaces you need to write the code like as shown below
+
+
+[WebMethod]
+public static List<string> GetAutoCompleteData(string username)
+{
+List<string> result = new List<string>();
+using (SqlConnection con = new SqlConnection("Data Source=Suresh;Integrated Security=true;Initial Catalog=MySampleDB"))
+{
+using (SqlCommand cmd = new SqlCommand("select UserId,UserName from userdetails where UserName LIKE '%'+@SearchText+'%'", con))
+{
+con.Open();
+cmd.Parameters.AddWithValue("@SearchText", username);
+SqlDataReader dr = cmd.ExecuteReader();
+while (dr.Read())
+{
+result.Add(string.Format("{0}/{1}", dr["UserName"], dr["UserId"]));
+}
+return result;
+}
+}
+}
+
+VB.NET Code
+
+
+Imports System.Collections.Generic
+Imports System.Web.Services
+Imports System.Data.SqlClient
+Partial Class VBCode
+Inherits System.Web.UI.Page
+Protected Sub Page_Load(sender As Object, e As EventArgs)
+End Sub
+<WebMethod()> _
+Public Shared Function GetAutoCompleteData(ByVal username As String) As List(Of String)
+Dim result As New List(Of String)()
+Using con As New SqlConnection("Data Source=Suresh;Integrated Security=true;Initial Catalog=MySampleDB")
+Using cmd As New SqlCommand("select UserId,UserName from userdetails where UserName LIKE '%'+@SearchText+'%'", con)
+con.Open()
+cmd.Parameters.AddWithValue("@SearchText", username)
+Dim dr As SqlDataReader = cmd.ExecuteReader()
+While dr.Read()
+result.Add(String.Format("{0}/{1}", dr("UserName"), dr("UserId")))
+End While
+Return result
+End Using
+End Using
+End Function
+End Class
+
+Demo
