@@ -1,0 +1,100 @@
+jQuery slideUp slideDown slideToggle Effects Example /Sample
+By: Suresh Dasari Oct 7, 2012
+Categories: General , JQuery
+ 
+ 
+Introduction: 
+
+Here I will explain how to implement simple div with JQuery slideup, slidedown and slidetoggle effects in asp.net.
+
+Description: 
+   
+In previous posts I explained jQuery fadein fadeout fadeto div example, Best jQuery Drag and Drop Plugins, Draggable and Resizable example, split the string, add fade in effect to page and many articles relating to JQuery. Now I will explain how implement simple div with slideup, slidedown and slidetoggle effects in JQuery.
+
+To implement slideup, slidedown and slidetoggle effects for div in JavaScript we need to write much code but in JQuery we can achieve this functionality just by simple properties slideup, slidedown and slidetoggle that would be like as shown below
+
+
+<script type="text/javascript">
+$(document).ready(function() {
+$('#slideupdiv').slideDown('slow');
+$("#slidedowndiv").slideUp('slow');
+$("#slidetogglediv").slideToggle('slow');
+});
+</script>
+OR
+
+
+<script type="text/javascript">
+$(document).ready(function() {
+$('#slideupdiv').slideDown(2000);
+$("#slidedowndiv").slideUp(2000);
+$("#slidetogglediv").slideToggle(2000);
+});
+</script>
+If you observe above script I used one div with slideDown, Second div with slideUp and another div with slideToggle properties.
+
+slideDown():  This method display the matched elements with slide down effect
+
+slideUp(): This method hide the matched elements with slide up effect
+
+slideToggle(): This method Display or hide the matched elements with a sliding motion means suppose if matched element displayed it will hide with slide motion effect otherwise if matched element hidden it will display with slidedown effect.
+
+If you want check this code in sample check below code
+
+Example:
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1" runat="server">
+<title>jQuery SlideUp, SlideDown and SlideToggle effects for div Example</title>
+<style type="text/css">
+.slidediv{
+width: 160px; height: 50px; padding: 0.5em;background:#EB5E00;color:#fff
+}
+</style>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js">
+</script>
+
+
+ 
+
+</head>
+<body>
+<form id="form1" runat="server">
+<h2> jQuery SlideUp, SlideDown and SlideToggle effects for div Example</h2>
+<div id="slideupdiv" class="slidediv">
+<b>Click me - SlideUp()</b>
+</div><br />
+<div id="slidedowndiv"  class="slidediv">
+<b>Click me - SlideDown()</b>
+</div><br />
+<input type="button" id="btnToggle" value="Click To Toggle" />
+<div id="slidetogglediv"  class="slidediv">
+
+<b>SlideToggle()</b>
+</div><br />
+<input type="button" id="btnReset" value="Reset" />
+<script type="text/javascript">
+// Applying SlideUp effect
+$("#slideupdiv").click(function() {
+$(this).slideUp(2000);
+});
+// Applying SlideDown effect
+$("#slidedowndiv").click(function() {
+$(this).hide().slideDown(2000);
+});
+// Applying SlideToggle effect
+$("#btnToggle").click(function() {
+$("#slidetogglediv").slideToggle();
+});
+// Reset the div's
+$('#btnReset').click(function() {
+$('#slideupdiv').fadeIn('slow');
+$("#slidedowndiv").fadeIn('slow');
+$("#slidetogglediv").fadeIn('slow');
+})
+</script>
+</form>
+</body>
+</html>
+Live Demo
