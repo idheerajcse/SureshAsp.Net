@@ -1,0 +1,65 @@
+AngularJS Pass Value from One Controller to Another Controller
+By: Suresh Dasari Jul 26, 2016
+Categories: AngularJS
+Introduction: 
+
+Here I will explain how to use AngularJS to pass / send value from one controller to another controller with example or AngularJS pass data between controllers with example or use services in AngularJS to send values from one controller to another controller with example or AngularJS share data between controllers with example. In AngularJS by creating services we can pass values from one controller to another controller.
+
+Description: 
+   
+In previous articles I explained Angularjs upload multiple files using angular file upload example, Angularjs textarea show number of characters remaining count example, Angularjs show / hide div with radiobutton selection, Angularjs tutorial for beginners with hello world example, Angularjs refresh div for every 1 second using interval mode and many articles relating to AngularJS, jQuery, JavaScript and asp.net. Now I will explain how to share values between controllers in AngularJS with example.
+
+To send values from one controller to another controller we need to create custom service with required values and inject that service into respective controllers to access those values in AngularJS for that we need to write the code like as shown below
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Angularjs Pass Values from One Controller to Another Controller</title>
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+<script type="text/javascript">
+var app = angular.module('angularApp', [])
+// Creating New Service
+app.service("sampleService", function () {
+this.user = { name: 'Suresh Dasari', Location: 'Chennai' }
+this.designation='Team Leader'
+})
+// First Controller with Custom Service
+app.controller("angCtrl1", function ($scope,sampleService) {
+$scope.empname = sampleService.user.name;
+$scope.emplocation = sampleService.user.Location;
+$scope.emprole = sampleService.designation;
+$scope.changevals = function () {
+sampleService.user.Location = "Hyderabad";
+sampleService.designation = "Technical Lead Development";
+$scope.emplocation = sampleService.user.Location;
+$scope.emprole = sampleService.designation;
+}
+});
+// Second Controller with Custom Service
+app.controller("angCtrl2", function ($scope,sampleService) {
+$scope.ulocation = sampleService.user.Location;;
+$scope.urole = sampleService.designation;
+$scope.updatevals = function () {
+$scope.ulocation = sampleService.user.Location;
+$scope.urole = sampleService.designation;
+}
+});
+</script>
+</head>
+<body ng-app="angularApp">
+<div ng-controller="angCtrl1">
+<div><b>User Details - Controller 1</b></div>
+<p>Name : {{empname}}</p>
+<p>Location : {{emplocation}}</p>
+<p>Designation : {{emprole}}</p>
+<input type="button" value="Change Values" ng-click="changevals()" />
+</div>
+<br />
+<div ng-controller="angCtrl2">
+<div><b>User Details - Controller 2</b></div>
+<input type="button" value="Change Values" ng-click="updatevals()" />
+<p>Location : {{ulocation}}</p>
+<p>Designation : {{urole}}</p>
+</div>
+</body>
+</html>
