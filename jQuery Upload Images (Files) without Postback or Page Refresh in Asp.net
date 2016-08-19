@@ -1,0 +1,149 @@
+Introduction: 
+
+Here I will explain how to upload images or files using jQuery without  page refresh or postback in asp.net using handler (ashx) in c#, vb.net or jQuery upload files or images without postback in asp.net using Handler in c#, vb.net or asynchronous file upload using jQuery without submitting form in asp.net with c#, vb.net.
+
+Description: 
+   
+In previous articles I explained jQuery call asp.net page methods from json, 7 + jQuery multiple fileupload plugin examples, jQuery check file size before upload in asp.net, jQuery setInterval() function example, jQuery upload multiple files using uplodify plugin in asp.net and many articles relating to jQuery, JavaScript and asp.net. Now I will explain how to upload images or files using jQuery without  page refresh or postback in asp.net using handler (ashx) in c#, vb.net.
+
+To upload images or files using jQuery without  page refresh or postback in asp.net using handler (ashx) first create the new web application and open Default.aspx page and write the following code
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+<title>uploading file using jquery with generic handler ashx</title>
+<script src="http://code.jquery.com/jquery-1.10.2.js" type="text/javascript"></script>
+<script type="text/javascript">
+$(function () {
+$('#btnUpload').click(function () {
+var fileUpload = $("#FileUpload1").get(0);
+var files = fileUpload.files;
+var test = new FormData();
+for (var i = 0; i < files.length; i++) {
+test.append(files[i].name, files[i]);
+}
+$.ajax({
+url: "UploadHandler.ashx",
+type: "POST",
+contentType: false,
+processData: false,
+data: test,
+// dataType: "json",
+success: function (result) {
+alert(result);
+},
+error: function (err) {
+alert(err.statusText);
+}
+});
+});
+})
+</script>
+</head>
+<body>
+<form id="form1" runat="server">
+<div>
+<input type="file" id="FileUpload1" />
+<input type="button" id="btnUpload" value="Upload Files"/>
+</div>
+</form>
+</body>
+</html>
+If you observe jQuery ajax method in above code we mentioned “UploadHandler.ashx” by using this file we will upload files in server side. Now add handler file in your application by following below steps
+
+Right click on your application à select Add New Item à select Generic Handler file à Give a name and click Add button like as shown below
+
+
+
+
+Once you finished adding handler file now add new folder in your application “uploads” that would be like as shown below
+
+
+
+
+ 
+
+Now open UploadHandler.ashx file and write the following code
+
+C# Code
+
+
+<%@ WebHandler Language="C#" Class="UploadHandler" %>
+
+using System;
+using System.Web;
+using System.IO;
+
+public class UploadHandler : IHttpHandler {
+
+public void ProcessRequest (HttpContext context) {
+if (context.Request.Files.Count > 0)
+{
+HttpFileCollection files = context.Request.Files;
+for (int i = 0; i < files.Count; i++)
+{
+HttpPostedFile file = files[i];
+string fname;
+if (HttpContext.Current.Request.Browser.Browser.ToUpper() == "IE" || HttpContext.Current.Request.Browser.Browser.ToUpper() == "INTERNETEXPLORER")
+{
+string[] testfiles = file.FileName.Split(new char[] { '\\' });
+fname = testfiles[testfiles.Length - 1];
+}
+else
+{
+fname = file.FileName;
+}
+fname=Path.Combine(context.Server.MapPath("~/uploads/"), fname);
+file.SaveAs(fname);
+}
+}
+context.Response.ContentType = "text/plain";
+context.Response.Write("File Uploaded Successfully!");
+}
+public bool IsReusable {
+get {
+return false;
+}
+}
+}
+
+VB.NET Code
+
+<%@ WebHandler Language="VB" Class="Handler" %>
+
+Imports System.Web
+Imports System.IO
+Public Class Handler : Implements IHttpHandler
+Public Sub ProcessRequest(ByVal context As HttpContext) Implements IHttpHandler.ProcessRequest
+If context.Request.Files.Count > 0 Then
+Dim files As HttpFileCollection = context.Request.Files
+For i As Integer = 0 To files.Count - 1
+Dim file As HttpPostedFile = files(i)
+Dim fname As String
+If HttpContext.Current.Request.Browser.Browser.ToUpper() = "IE" OrElse HttpContext.Current.Request.Browser.Browser.ToUpper() = "INTERNETEXPLORER" Then
+Dim testfiles As String() = file.FileName.Split(New Char() {"\"c})
+fname = testfiles(testfiles.Length - 1)
+Else
+fname = file.FileName
+End If
+fname = Path.Combine(context.Server.MapPath("~/uploads/"), fname)
+file.SaveAs(fname)
+Next
+End If
+context.Response.ContentType = "text/plain"
+context.Response.Write("File Uploaded Successfully!")
+End Sub
+Public ReadOnly Property IsReusable() As Boolean Implements IHttpHandler.IsReusable
+Get
+Return False
+End Get
+End Property
+End Class
+
+Now run your application that will allow you to upload files in upload folder using handler files.
+
+Demo
+
+
+
+Download Sample Attached
