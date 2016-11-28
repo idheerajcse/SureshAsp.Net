@@ -1,0 +1,46 @@
+http://www.aspdotnet-suresh.com/2015/06/google-map-api-get-current-location-latitude-longitude-using-javascript.html
+
+
+Google Map API Get Current Location Latitude & Longitude using JavaScript
+By: Suresh Dasari Jun 19, 2015
+Categories: Google API , Google MAPS , Google Maps API
+ 
+ 
+Introduction:
+
+Here I will explain how to get current location latitude and longitude in Google map using JavaScript or Google maps get current location latitude and longitude using Google API in JavaScript example. By using navigator.geolocation.getCurrentPosition class we can get current location latitude and longitude using Google map.
+
+Description:
+
+In previous article I explained clearly Google places autocomplete textbox without maps, how to add Google map to website in asp.net, Add marker to Google map in asp.net website, Add multiple markers to Google map using JSON, Add custom marker to Google maps API, Show info window in Google map when click on marker  and many articles relating to Google map, jQuery, JavaScript, asp.net. Now I will explain how to get current location latitude and longitude in Google map using JavaScript.
+
+To get current location latitude and longitude using Google Maps API we need to write the code like as shown below
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Google Maps Api Get Current Location Latitude and Longitude</title>
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true&libraries=places"></script>
+<script type="text/javascript">
+function geolocate() {
+if (navigator.geolocation) {
+navigator.geolocation.getCurrentPosition(function (position) {
+var geolocation = new google.maps.LatLng(
+position.coords.latitude, position.coords.longitude);
+var location = "<b>Latitude</b>: " + geolocation.A + "<br/>";
+location += "<b>Longitude</b>: " + geolocation.F;
+document.getElementById('lblResult').innerHTML = location
+});
+}
+}
+</script>
+</head>
+<body>
+<div style="margin-top:200px; margin-left:200px">
+<span>Location:</span>
+<input type="button" id="btnGet" value="Get Latitude & Longitude" onclick="geolocate()" /><br /><br />
+Current Location Latitude & Longitude:<br /><br />
+<label id="lblResult" />
+</div>
+</body>
+</html>
