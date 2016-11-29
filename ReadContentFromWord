@@ -1,0 +1,112 @@
+Read Data From MS Word File (Document) in Asp.Net using C#, VB.Net
+By: Suresh Dasari Jun 8, 2016
+Categories: Asp.net , c# , VB.NET
+ 
+ 
+Introduction: 
+
+Here I will explain how to read from ms word file in asp.net using c#, vb.net with example or how to read data from word document in asp.net using c#, vb.net with example or how to read word document in asp.net using c#, vb.net with example. By using “Microsoft.Office.Interop.Word” reference in asp.net application we can read data from word file / document using c#, vb.net.
+
+Description: 
+   
+In previous articles I explained asp.net create / read / get cookies in website, Get user ip address in asp.net mvc, read / write text file in asp.net using c#, vb.net, create error log files in asp.net using c#, vb.net, asp.net read / insert data into xml file, export data from excel to gridview in asp.net, Import excel data to gridview in asp.net using c#, vb.net and many articles relating to gridview, asp.net, c#,vb.net and jQuery. Now I will explain how to read data from word document file in asp.net using c#, vb.net with example.
+
+To read data from word document file in asp.net first create new word document file in your system and write some content in that to read like as shown below
+
+
+
+Now in visual studio create new website and open your aspx page and write the following code
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+<title>How To Read MS Word File in Asp.Net using C#, VB.Net</title>
+</head>
+<body>
+<form id="form1" runat="server">
+<div>
+<h2>
+Read Word Document in ASP.Net using C#.Net & VB.Net</h2>
+<table>
+<tbody>
+<tr>
+<td>Select Word File
+</td>
+<td><asp:fileupload id="fileupload1" runat="server"></asp:fileupload></td>
+</tr>
+<tr>
+<td></td>
+<td><asp:button id="btnRead" onclick="btnRead_Click" runat="server" text="Read Document"></asp:button></td>
+</tr>
+<tr>
+<td colspan="2">Content of Word Document:
+</td>
+</tr>
+<tr>
+<td colspan="2"><asp:textbox height="500px" id="txtread" runat="server" textmode="MultiLine" width="100%"></asp:textbox>
+</td>
+</tr>
+</tbody></table>
+</div>
+</form>
+</body>
+</html>
+After completion of adding aspx page code now we need to add “Micrsoft Office Object Library” reference to our application because to read word document we need to Microsoft word library reference to our application. 
+
+
+ 
+
+To add reference right click on your application à select add reference à Go to COM section à from that Microsoft Office Object Library à Click OK like as shown below.
+
+
+
+Here you don’t need to worry about version of Microsoft Office Object Library because it will vary based on word installed on your computer.
+
+After adding Microsoft word library reference now open code behind file and add following namespaces
+
+C# Code
+
+
+using System;
+using System.Web;
+
+After completion of adding namespaces you need to write the code like as shown below
+
+
+protected void btnRead_Click(object sender, EventArgs e)
+{
+object filename = Server.MapPath(fileupload1.FileName);
+Microsoft.Office.Interop.ApplicationClass mswordappcls = new Microsoft.Office.Interop.Word.ApplicationClass();
+Microsoft.Office.Interop.Word.Document msworddoc = new Microsoft.Office.Interop.Word.Document();
+object readOnly = false;
+object isVisible = true;
+object missing = System.Reflection.Missing.Value;
+msworddoc = mswordappcls.Documents.Open(ref filename, ref missing, ref readOnly, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref isVisible);
+txtread.Text = msworddoc.Content.Text;
+mswordappcls.Documents.Close();
+}
+
+VB.NET Code
+
+
+Partial Class VBCode
+Inherits System.Web.UI.Page
+Protected Sub Page_Load(ByVal sender As Object, ByVal e As EventArgs)
+
+End Sub
+Protected Sub btnRead_Click(ByVal sender As Object, ByVal e As EventArgs)
+Dim filename As Object = Server.MapPath(fileupload1.FileName)
+Dim mswordappcls As Microsoft.Office.Interop.ApplicationClass = New Microsoft.Office.Interop.Word.ApplicationClass()
+Dim msworddoc As New Microsoft.Office.Interop.Word.Document()
+Dim [readOnly] As Object = False
+Dim isVisible As Object = True
+Dim missing As Object = System.Reflection.Missing.Value
+msworddoc = mswordappcls.Documents.Open(filename, missing, [readOnly], missing, missing, missing, missing, missing, missing, missing, missing, isVisible)
+txtread.Text = msworddoc.Content.Text
+mswordappcls.Documents.Close()
+End Sub
+End Class
+
+Demo
+
+Following is the demo of our application to read word document content in asp.net using c#, vb.net.
