@@ -1,0 +1,250 @@
+Save & Retrieve (Display) Binary Images in Gridview from Database in Asp.net using C#, VB.NET
+By: Suresh Dasari Jul 2, 2015
+Categories: Asp.net , c# , Fileupload , Gridview , VB.NET
+ 
+ 
+Introduction: 
+
+Here I will explain how to save images in binary format and display binary images from sql server database in asp.net gridview control using c#, vb.net with example or upload or insert and retrieve binary format images from database and display it in asp.net gridview using c#, vb.net.
+
+Description: 
+   
+In previous articles I explained jQuery upload multiple files using handler file in asp.net, display images from database path in asp.net gridview, upload & download files from database in asp.net, save images in folder and path in database display it in asp.net gridview, gridview examples in asp.net, Delete multiple rows in gridview using checkbox in asp.net and many articles relating to gridview, asp.net, c#,vb.net and jQuery. Now I will explain how to save and display images from sql server database in asp.net gridview control using c#, vb.net with example.
+
+Before implement this example first design one table imagedetails in your database as shown below
+
+Column Name
+Data Type
+Allow Nulls
+imageid
+Int(IDENTITY=TRUE)
+NO
+imagename
+varchar(50)
+Yes
+imagedata
+varbinary(max)
+Yes
+Once table created in database that would be like as shown below
+
+
+
+Now open your aspx page and write the code like as shown below
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1">
+<title>Display images from sql server database in asp.net gridview control</title>
+<style type="text/css">
+.GridviewDiv {font-size: 100%; font-family: 'Lucida Grande', 'Lucida Sans Unicode', Verdana, Arial, Helevetica, sans-serif; color: #303933;}
+.headerstyle
+{
+color:#FFFFFF;border-right-color:#abb079;border-bottom-color:#abb079;background-color: #df5015;padding:0.5em 0.5em 0.5em 0.5em;text-align:center;
+}
+</style>
+</head>
+<body>
+<form id="form1" runat="server">
+<div>
+<asp:FileUpload ID="fileUpload1" runat="server" /><br />
+<asp:Button ID="btnUpload" runat="server" Text="Upload" onclick="btnUpload_Click" />
+</div>
+<div class="GridviewDiv">
+<asp:GridView ID="gvImages" CssClass="Gridview" runat="server" AutoGenerateColumns="False">
+<HeaderStyle CssClass="headerstyle" />
+<Columns>
+<asp:BoundField HeaderText = "Image Name" DataField="imagename" />
+<asp:TemplateField HeaderText="Image">
+<ItemTemplate>
+<asp:Image ID="Image1" runat="server" ImageUrl='<%# "ImageHandler.ashx?ImID="+ Eval("imageid") %>' Height="150px" Width="150px"/>
+</ItemTemplate>
+</asp:TemplateField>
+</Columns>
+</asp:GridView>
+</div>
+</form>
+</body>
+</html>
+
+Now add following namespaces in codebehind file
+
+C# Code
+
+
+using System;
+using System.Data.SqlClient;
+using System.IO;
+using System.Web.UI.WebControls;
+using System.Web;
+
+After completion of adding namespaces you need to write the code like as shown below
+
+
+string strCon = "Data Source=Suresh;Integrated Security=true;Initial Catalog=MySampleDB";
+protected void Page_Load(object sender, EventArgs e)
+{
+if (!IsPostBack)
+{
+BindGridviewData();
+}
+}
+// Bind Gridview Data
+private void BindGridviewData()
+{
+using (SqlConnection con = new SqlConnection(strCon))
+{
+using (SqlCommand cmd = new SqlCommand())
+{
+cmd.CommandText = "select imageid,imagename from imagedetails";
+cmd.Connection = con;
+con.Open();
+gvImages.DataSource = cmd.ExecuteReader();
+gvImages.DataBind();
+con.Close();
+}
+}
+}
+// Save files to Folder and files path in database
+protected void btnUpload_Click(object sender, EventArgs e)
+{
+//Condition to check if the file uploaded or not
+if (fileUpload1.HasFile)
+{
+int length = fileUpload1.PostedFile.ContentLength;
+byte[] imgbyte = new byte[length];
+HttpPostedFile img = fileUpload1.PostedFile;
+//set the binary data
+img.InputStream.Read(imgbyte, 0, length); 
+string filename = Path.GetFileName(fileUpload1.PostedFile.FileName);
+using (SqlConnection con = new SqlConnection(strCon))
+{
+using (SqlCommand cmd = new SqlCommand())
+{
+cmd.CommandText = "insert into imagedetails(imagename,imagedata) values(@Name,@Data)";
+cmd.Parameters.AddWithValue("@Name", filename);
+cmd.Parameters.AddWithValue("@Data", imgbyte);
+cmd.Connection = con;
+con.Open();
+cmd.ExecuteNonQuery();
+con.Close();
+BindGridviewData();
+}
+}
+}
+}
+
+
+ 
+
+VB.NET Code
+
+
+Imports System.Data.SqlClient
+Imports System.IO
+Imports System.Web.UI.WebControls
+Imports System.Web
+Partial Class VBCode
+Inherits System.Web.UI.Page
+Private strCon As String = "Data Source=Suresh;Integrated Security=true;Initial Catalog=MySampleDB"
+Protected Sub Page_Load(ByVal sender As Object, ByVal e As EventArgs) Handles Me.Load
+If Not IsPostBack Then
+BindGridviewData()
+End If
+End Sub
+' Bind Gridview Data
+Private Sub BindGridviewData()
+Using con As New SqlConnection(strCon)
+Using cmd As New SqlCommand()
+cmd.CommandText = "select imageid,imagename from imagedetails"
+cmd.Connection = con
+con.Open()
+gvImages.DataSource = cmd.ExecuteReader()
+gvImages.DataBind()
+con.Close()
+End Using
+End Using
+End Sub
+' Save files to Folder and files path in database
+Protected Sub btnUpload_Click(ByVal sender As Object, ByVal e As EventArgs)
+'Condition to check if the file uploaded or not
+If fileUpload1.HasFile Then
+Dim length As Integer = fileUpload1.PostedFile.ContentLength
+Dim imgbyte As Byte() = New Byte(length - 1) {}
+Dim img As HttpPostedFile = fileUpload1.PostedFile
+'set the binary data
+img.InputStream.Read(imgbyte, 0, length)
+Dim filename As String = Path.GetFileName(fileUpload1.PostedFile.FileName) 
+Using con As New SqlConnection(strCon)
+Using cmd As New SqlCommand()
+cmd.CommandText = "insert into imagedetails(imagename,imagedata) values(@Name,@Data)"
+cmd.Parameters.AddWithValue("@Name", filename)
+cmd.Parameters.AddWithValue("@Data", imgbyte)
+cmd.Connection = con
+con.Open()
+cmd.ExecuteNonQuery()
+con.Close()
+BindGridviewData()
+End Using
+End Using
+End If
+End Sub
+End Class
+
+If you observe above gridview TemplateField code in aspx page we are fetching images using Handler file ImageHandler.ashx because we are saving images in binary format. By using HTTPHandler we can easily get binary data and display it in our application.
+
+Here HTTPHandler is a simple class that allows you to process a request and return a response to the browser. Simply we can say that a Handler is responsible for fulfilling requests from the browser. It can handle only one request at a time, which in turn gives high performance.
+To add handler file Right Click on your project à select Add New Item à select Handler file à give name as ImageHandler.ashx like as shown in following image and click ok
+
+
+Now open your ImageHandler.ashx file and write the following code
+
+C# Code
+
+
+using System;
+using System.Web;
+using System.Data.SqlClient;
+public class ImageHandler : IHttpHandler {
+public void ProcessRequest (HttpContext context) {
+string imageid = context.Request.QueryString["ImID"];
+SqlConnection con = new SqlConnection("Data Source=Suresh;Integrated Security=true;Initial Catalog=MySampleDB");
+con.Open();
+SqlCommand cmd = new SqlCommand("select imagedata from imagedetails where imageid=" + imageid, con);
+SqlDataReader dr = cmd.ExecuteReader();
+dr.Read();
+context.Response.BinaryWrite((byte[])dr[0]);
+con.Close();
+context.Response.End();
+}
+public bool IsReusable {
+get {
+return false;
+}
+}
+}
+
+VB.NET Code
+
+
+Imports System.Web
+Imports System.Data.SqlClient
+Public Class Handler : Implements IHttpHandler
+Public Sub ProcessRequest(ByVal context As HttpContext) Implements IHttpHandler.ProcessRequest
+Dim imageid As String = context.Request.QueryString("ImID")
+Dim con As New SqlConnection("Data Source=Suresh;Integrated Security=true;Initial Catalog=MySampleDB")
+con.Open()
+Dim cmd As New SqlCommand(Convert.ToString("select imagedata from imagedetails where imageid=") & imageid, con)
+Dim dr As SqlDataReader = cmd.ExecuteReader()
+dr.Read()
+context.Response.BinaryWrite(DirectCast(dr(0), Byte()))
+con.Close()
+context.Response.[End]()
+End Sub
+Public ReadOnly Property IsReusable() As Boolean Implements IHttpHandler.IsReusable
+Get
+Return False
+End Get
+End Property
+End Class
+
+Now run your application and check output that would be like as shown in following output
