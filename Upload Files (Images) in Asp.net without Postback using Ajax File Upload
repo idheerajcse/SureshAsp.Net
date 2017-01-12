@@ -1,0 +1,117 @@
+Upload Files (Images) in Asp.net without Postback using Ajax File Upload
+By: Suresh Dasari Aug 17, 2016
+Categories: Ajax , AjaxAsyncFileUpload , Asp.net , Fileupload
+ 
+ 
+Introduction: 
+
+Here I will explain how to upload multiple files / images in asp.net without postback using ajax fileupload control in c#, vb.net with example or ajax file upload control in asp.net example using c#, vb.net  or asynchronous file upload with progress bar using ajax fileupload control in asp.net with examples. By using ajax fileupload control we can upload multiple files / images in asp.net without postback or reload page in c#, vb.net with example.
+
+Description: 
+   
+In previous articles I explained asp.net mvc upload files to server or folder, angularjs upload multiple files using angular file upload in asp.net, jQuery upload files / images without postback in asp.net, display images from database using handler in asp.net, Bind Dropdownlist selected value in asp.net gridview, gridview rowdatabound event example in asp.net and many articles relating to ajax, gridview, asp.net, c#,vb.net and jQuery. Now I will explain how to upload multiple files / images in asp.net without postback using ajax fileupload in c#, vb.net with example.
+
+Before we start implement the code we need to install Ajax control toolkit in our visual studio for that download the file from this url Ajax control toolkit.
+
+Once downloaded the file start install it and follow the instructions which showing in screen automatically it will install all the controls in visual studio. Once installation done ajax controls will be like as shown below in visual studio.
+
+
+Once our controls installation done create one new asp.net web application --> Now Drag and drop AjaxFileUpload control from Ajax control toolkit into your aspx page. Once we add AjaxFileUpload control our page code will be like as shown below
+
+
+<%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="ajaxToolkit" %>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+<title>Upload Files or Images in Asp.net without postback</title>
+</head>
+<body>
+<form id="form1" runat="server">
+<div>
+<asp:ScriptManager runat="server"></asp:ScriptManager>
+<ajaxToolkit:AjaxFileUpload ID="AjaxFileUpload1" runat="server" Width="500px" AllowedFileTypes="jpg,jpeg,png" MaximumNumberOfFiles="4" OnUploadComplete="AjaxFileUpload1_UploadComplete" />
+</div>
+</form>
+</body>
+</html>
+
+If you observe above AjaxFileUpload control we added multiple properties by using those properties, we can set our restrictions while uploading files.
+
+
+ 
+
+AllowedFileTypes: By using this property we can restrict type of files that need to be uploaded.
+
+MaximumNumberOfFiles: By using this property we can restrict number of files that a user can added to upload queue.
+
+OnUploadComplete: This property will call server side event to upload files and it will raise whenever we click upload button in Ajaxfileupload control.
+
+Now add uploads folder to your application to upload files once finished adding folder then open code behind file and write the code like as shown below.
+
+C# Code
+
+
+using System;
+using System.IO;
+
+After completion of adding namespaces you need to write the code like as shown below
+
+
+protected void AjaxFileUpload1_UploadComplete(object sender, AjaxControlToolkit.AjaxFileUploadEventArgs e)
+{
+string fileName = Path.GetFileName(e.FileName);
+AjaxFileUpload1.SaveAs(Server.MapPath("~/uploads/" + fileName));
+}
+
+VB.NET Code
+
+
+Imports System.IO
+Imports AjaxControlToolkit
+
+Partial Class VBCode
+Inherits System.Web.UI.Page
+Protected Sub Page_Load(ByVal sender As Object, ByVal e As EventArgs)
+End Sub
+Protected Sub AjaxFileUpload1_UploadComplete(ByVal sender As Object, ByVal e As AjaxFileUploadEventArgs)
+Dim fileName As String = Path.GetFileName(e.FileName)
+AjaxFileUpload1.SaveAs(Server.MapPath("~/uploads/" & fileName))
+End Sub
+End Class
+
+Now open web.config file add following handlers to avoid Ajax fileupload errors while uploading files.
+
+IIS6 or Visual Studio 2010 or Earlier Versions
+
+If you are using visual studio 2010 or IIS6 or earlier versions add following code under system.web like as shown below
+
+
+<system.web>
+....
+<httpHandlers>
+<add verb="*" path="AjaxFileUploadHandler.axd"
+type="AjaxControlToolkit.AjaxFileUploadHandler,
+AjaxControlToolkit"/>
+</httpHandlers>
+....
+</system.web>
+
+IIS7 or Visual Studio 2012 or Higher Version
+
+If you are using visual studio 2012 or IIS7 or higher versions add following code under system.webServer like as shown below
+
+
+<system.webServer>
+....
+<validation validateIntegratedModeConfiguration="false" />
+<handlers>
+<add name="AjaxFileUploadHandler" verb="*" path="AjaxFileUploadHandler.axd" type="AjaxControlToolkit.AjaxFileUploadHandler, AjaxControlToolkit"/>
+</handlers>
+....
+</system.webServer>
+
+Once we finished adding all the details now run the application and check the output.
+
+Demo
+
+Following is the demo of uploading files in asp.net without page refresh using Ajax fileupload.
