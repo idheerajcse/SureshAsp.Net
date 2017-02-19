@@ -1,0 +1,184 @@
+Reflection to Get All List Property Names and Values in C#, VB.NET
+By: Suresh Dasari Feb 17, 2017
+Categories: c# , C#.Net , Code Snippets , Reflection , VB.NET
+ 
+ 
+Introduction:
+
+Here we will learn how to get object property names and values using reflection reflection in c#, vb.net with example or use reflection to get all property types and names of an object in c#, vb.net with example or reflection to get all properties of any object in c#, vb.net or Type.GetAllProperties reflection method to get all properties and values of an object in c#, vb.net with example. By using Reflection properties we can easily get all object property names and values based on our requirements.
+
+Description:
+
+In previous articles I explained send display images in gridview from database in asp.net, asp.net upload image and show image preview before upload, Display images in crystal reports in asp.net with example, asp.net open pdf file in web browser with example, jQuery zoom image on mouse over with example, dictionary object in c#, vb.net with example, static constructor in c#, vb.net with example, difference between ref and out in c#, vb.net with example and many more articles related to generic list, asp.net, mvc, c#, vb.net. Now I will explain how to use reflection to get object property names and values in c#, vb.net with example.
+
+By using Reflection PropertiesInfo we can easily get object list property names and values based on our requirements.
+
+Following is the simple code snippet to get all the property names and values of an object in c#, vb.net using reflection.
+
+C# Code
+
+
+Type type = user.GetType();
+PropertyInfo[] props = type.GetProperties();
+string str = "{";
+foreach (var prop in props)
+{
+str+= (prop.Name+":"+  prop.GetValue(user))+",";
+}
+return str.Remove(str.Length-1)+"}";
+
+VB.NET Code
+
+
+Dim type As Type = user.[GetType]()
+Dim props() As PropertyInfo = type.GetProperties()
+Dim str As String = "{"
+For Each prop In props
+str += (prop.Name + ":" + CStr(prop.GetValue(user))) + ","
+Next
+Return str.Remove(str.Length - 1) + "}"
+
+If you want complete example to get all the properties and values of an object write the code like as shown following.
+
+C# Code
+
+
+using System;
+using System.Collections.Generic;
+using System.Reflection;
+
+namespace SampleConsoleApp
+{
+class Program
+{
+static void Main(string[] args)
+{
+List<userdetails> items = new List<userdetails>();
+items.Add(new userdetails { userid = 1, username = "suresh", location = "chennai" });
+items.Add(new userdetails { userid = 2, username = "rohini", location = "guntur" });
+items.Add(new userdetails { userid = 3, username = "praveen", location = "bangalore" });
+items.Add(new userdetails { userid = 4, username = "sateesh", location = "vizag" });
+items.Add(new userdetails { userid = 5, username = "madhav", location = "nagpur" });
+items.Add(new userdetails { userid = 6, username = "honey", location = "nagpur" });
+string strmsg = string.Empty;
+foreach (var user in items)
+{
+strmsg = GetPropertyValues(user);
+Console.WriteLine(strmsg);
+}
+Console.ReadLine();
+}
+private static string GetPropertyValues(userdetails user)
+{
+Type type = user.GetType();
+PropertyInfo[] props = type.GetProperties();
+string str = "{";
+foreach (var prop in props)
+{
+str+= (prop.Name+":"+  prop.GetValue(user))+",";
+}
+return str.Remove(str.Length-1)+"}";
+}
+}
+class userdetails
+{
+public int userid { get; set; }
+public string username { get; set; }
+public string location { get; set; }
+}
+}
+
+VB.NET Code
+
+
+Imports System.Reflection
+
+Module Module1
+Sub Main()
+Dim items As New List(Of userdetails)()
+Dim user As New userdetails()
+items.Add(New userdetails() With {
+.userid = 1,
+.username = "suresh",
+.location = "chennai"
+})
+items.Add(New userdetails() With {
+.userid = 2,
+.username = "rohini",
+.location = "guntur"
+})
+items.Add(New userdetails() With {
+.userid = 3,
+.username = "praveen",
+.location = "bangalore"
+})
+items.Add(New userdetails() With {
+.userid = 4,
+.username = "sateesh",
+.location = "vizag"
+})
+items.Add(New userdetails() With {
+.userid = 5,
+.username = "madhav",
+.location = "nagpur"
+})
+items.Add(New userdetails() With {
+.userid = 6,
+.username = "honey",
+.location = "nagpur"
+})
+Dim strmsg As String = String.Empty
+For Each user In items
+strmsg = GetPropertyValues(user)
+Console.WriteLine(strmsg)
+Next
+Console.ReadLine()
+End Sub
+Private Function GetPropertyValues(user As userdetails) As String
+Dim type As Type = user.[GetType]()
+Dim props() As PropertyInfo = type.GetProperties()
+Dim str As String = "{"
+For Each prop In props
+str += (prop.Name + ":" + CStr(prop.GetValue(user))) + ","
+Next
+Return str.Remove(str.Length - 1) + "}"
+End Function
+Class userdetails
+Public Property userid() As Integer
+Get
+Return m_userid
+End Get
+Set
+m_userid = Value
+End Set
+End Property
+Private m_userid As Integer
+Public Property username() As String
+Get
+Return m_username
+End Get
+Set
+m_username = Value
+End Set
+End Property
+Private m_username As String
+Public Property location() As String
+Get
+Return m_location
+End Get
+Set
+m_location = Value
+End Set
+End Property
+Private m_location As String
+End Class
+End Module
+
+
+ 
+
+If you observe above code we added namespace “System.Reflection” to get properties and values of an object using PropertyInfo property.
+
+Demo
+
+When we run above code we will get result like as shown below
